@@ -2,7 +2,7 @@
 
 Shader "Water/Ocean_04" {
     Properties {
-        _WaterColor ("Water Color", Color) = (0.4926471,0.6011156,0.3,0.3)
+        _WaterColor ("Water Color", Color) = (0.4926471,0.6011156,1,1)
         _MainTexture ("Main Texture", 2D) = "white" {}
         _FoamTexture ("Foam Texture", 2D) = "white" {}
         _Noise ("Noise", 2D) = "white" {}
@@ -14,13 +14,10 @@ Shader "Water/Ocean_04" {
         _FoamOpacity ("Foam Opacity", Range(0, 2)) = 1
         _WaterOrientation ("Water Orientation", Range(0, 4)) = 2
     }
-SubShader {
-    Tags { "RenderType"="Transparent" "Queue"="Transparent" }
-    LOD 200
-    Blend SrcAlpha OneMinusSrcAlpha
-    ZWrite Off
-    Cull Back
-        
+    SubShader {
+        Tags {
+            "RenderType"="Opaque"
+        }
         Pass {
             Name "FORWARD"
             Tags {
@@ -82,7 +79,7 @@ SubShader {
                 float4 _FoamTexture_var = tex2D(_FoamTexture,TRANSFORM_TEX(node_2716, _FoamTexture));
                 float3 emissive = saturate((1.0-(1.0-saturate(( _WaterColor.rgb > 0.5 ? (1.0-(1.0-2.0*(_WaterColor.rgb-0.5))*(1.0-_MainTexture_var.rgb)) : (2.0*_WaterColor.rgb*_MainTexture_var.rgb) )))*(1.0-saturate((saturate(( _FoamTexture_var.r > 0.5 ? (1.0-(1.0-2.0*(_FoamTexture_var.r-0.5))*(1.0-_Higlight_var.rgb)) : (2.0*_FoamTexture_var.r*_Higlight_var.rgb) ))*_FoamOpacity)))));
                 float3 finalColor = emissive;
-                return float4(finalColor, saturate(_WaterColor.a));
+                return fixed4(finalColor,1);
             }
             ENDCG
         }
