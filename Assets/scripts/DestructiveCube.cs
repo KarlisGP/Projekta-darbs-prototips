@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class DestructiveCube : MonoBehaviour
 {
     [Header("Game Over UI")]
-    public GameObject gameOverScreen; // Drag a UI panel into this slot
+    public GameObject gameOverScreen;
 
     private static bool gameIsOver = false;
 
@@ -16,9 +15,9 @@ public class DestructiveCube : MonoBehaviour
             gameOverScreen.SetActive(false);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        HandleContact(collision.gameObject);
+        HandleContact(other.gameObject);
     }
 
     private void HandleContact(GameObject other)
@@ -37,18 +36,15 @@ public class DestructiveCube : MonoBehaviour
 
     private void GameOver(GameObject player)
     {
-        // Freeze the player in place
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null) rb.linearVelocity = Vector2.zero;
 
-        // Show game over screen if assigned
         if (gameOverScreen != null)
             gameOverScreen.SetActive(true);
         else
-            Invoke("ReloadScene", 1f); // fallback: just reload
+            Invoke("ReloadScene", 1f);
     }
 
-    // Hook this up to a Retry button in your UI
     public void Retry()
     {
         gameIsOver = false;
