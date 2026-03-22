@@ -6,9 +6,6 @@ public class WaterPlaneController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            transform.Translate(Vector3.left * 2f);
-        }
+       
     }
 }
