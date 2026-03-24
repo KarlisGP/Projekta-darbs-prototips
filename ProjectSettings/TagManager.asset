@@ -7,7 +7,6 @@ TagManager:
   - Wall
   - Floor
   - Platform
-  - NoJumpPlatform
   layers:
   - Default
   - TransparentFX
