@@ -420,11 +420,40 @@ PrefabInstance:
       propertyPath: m_Name
       value: player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 956199751086523295, guid: 82a098a818a595941911bdea1784417e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4785811936692616195, guid: 82a098a818a595941911bdea1784417e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7326811453720336281}
   m_SourcePrefab: {fileID: 100100000, guid: 82a098a818a595941911bdea1784417e, type: 3}
+--- !u!1 &7326811453720336280 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4785811936692616195, guid: 82a098a818a595941911bdea1784417e, type: 3}
+  m_PrefabInstance: {fileID: 7326811453720336279}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7326811453720336281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7326811453720336280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f9886c32749158459bed90de00b7a7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerControllerBored
+  moveSpeed: 5
+  jumpForce: 10
+  groundCheck: {fileID: 0}
+  groundDistance: 0.1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  timeToWait: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
