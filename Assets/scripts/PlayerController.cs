@@ -4,145 +4,195 @@ using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
-[Header("Movement")]
-public float moveSpeed = 5f;
-public float jumpForce = 10f;
-public float jumpDelay = 0.2f;
+    [Header("Movement")]
+    public float moveSpeed = 5f;
+    public float jumpForce = 10f;
+    public float jumpDelay = 0.2f;
 
-private float moveX;
-private bool facingRight = true;
-private bool isJumpStarting = false;
+    private float moveX;
+    private bool facingRight = true;
+    private bool isJumpStarting = false;
 
-[Header("Ground Check")]
-public Transform groundCheck;
-public float groundDistance = 0.15f;
-public LayerMask groundMask;
+    [Header("Speed Boost")]
+    public float speedMultiplier = 1f;
+    private Coroutine boostRoutine;
 
-private bool isGrounded;
-private bool wasGrounded;
+    [Header("Ground Check")]
+    public Transform groundCheck;
+    public float groundDistance = 0.15f;
+    public LayerMask groundMask;
 
-[Header("Jump Restrictions")]
-public string noJumpTag = "NoJump"; // 👈 uses tag instead of layer
-private bool isOnNoJumpSurface;
+    private bool isGrounded;
+    private bool wasGrounded;
 
-[Header("Boredom Settings")]
-public float timeToWait = 5f;
-private float idleTimer = 0f;
+    [Header("Jump Restrictions")]
+    public string noJumpTag = "NoJump";
+    private bool isOnNoJumpSurface;
 
-[Header("Events")]
-public UnityEvent OnLandEvent;
+    [Header("Boredom Settings")]
+    public float timeToWait = 5f;
+    private float idleTimer = 0f;
 
-private Rigidbody2D rb;
-private Animator anim;
+    [Header("Events")]
+    public UnityEvent OnLandEvent;
 
-void Start()
-{
-rb = GetComponent<Rigidbody2D>();
-anim = GetComponent<Animator>();
+    private Rigidbody2D rb;
+    private Animator anim;
 
-if (OnLandEvent == null)
-OnLandEvent = new UnityEvent();
-}
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
 
-void Update()
-{
-moveX = Input.GetAxis("Horizontal");
+        if (OnLandEvent == null)
+            OnLandEvent = new UnityEvent();
+    }
 
-// Ground check
-Collider2D groundCollider = Physics2D.OverlapCircle(
-groundCheck.position,
-groundDistance,
-groundMask
-);
+    void Update()
+    {
+        moveX = Input.GetAxis("Horizontal");
 
-isGrounded = groundCollider != null;
+        // Ground check
+        Collider2D groundCollider = Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundDistance,
+            groundMask
+        );
 
-// ✅ TAG-BASED no jump detection
-isOnNoJumpSurface = groundCollider != null &&
-groundCollider.CompareTag(noJumpTag);
+        isGrounded = groundCollider != null;
 
-// Landing detection
-if (isGrounded && !wasGrounded)
-{
-OnLanding();
-}
-wasGrounded = isGrounded;
+        // No-jump detection
+        isOnNoJumpSurface = groundCollider != null &&
+                           groundCollider.CompareTag(noJumpTag);
 
-// Jump (blocked if on NoJump tagged object)
-if (Input.GetButtonDown("Jump") && isGrounded &&
-!isJumpStarting && !isOnNoJumpSurface)
-{
-StartCoroutine(JumpRoutine());
-}
+        // Landing detection
+        if (isGrounded && !wasGrounded)
+        {
+            OnLanding();
+        }
+        wasGrounded = isGrounded;
 
-// Flip character
-if (moveX > 0 && !facingRight) Flip();
-else if (moveX < 0 && facingRight) Flip();
+        // Jump
+        if (Input.GetButtonDown("Jump") && isGrounded &&
+            !isJumpStarting && !isOnNoJumpSurface)
+        {
+            StartCoroutine(JumpRoutine());
+        }
 
-// Bored logic
-HandleBoredom();
+        // Flip character
+        if (moveX > 0 && !facingRight) Flip();
+        else if (moveX < 0 && facingRight) Flip();
 
-// Animator updates
-anim.SetFloat("Speed", Mathf.Abs(moveX));
-anim.SetBool("isGrounded", isGrounded);
-anim.SetBool("isJumping", !isGrounded);
-anim.SetFloat("yVelocity", rb.linearVelocity.y);
+        // Bored logic
+        HandleBoredom();
 
-// Optional animation flag
-anim.SetBool("isOnNoJumpSurface", isOnNoJumpSurface);
-}
+        // Animator updates
+        anim.SetFloat("Speed", Mathf.Abs(moveX));
+        anim.SetBool("isGrounded", isGrounded);
+        anim.SetBool("isJumping", !isGrounded);
+        anim.SetFloat("yVelocity", rb.linearVelocity.y);
+        anim.SetBool("isOnNoJumpSurface", isOnNoJumpSurface);
+    }
 
-IEnumerator JumpRoutine()
-{
-isJumpStarting = true;
+    IEnumerator JumpRoutine()
+    {
+        isJumpStarting = true;
 
-anim.SetTrigger("JumpStart");
+        anim.SetTrigger("JumpStart");
 
-yield return new WaitForSeconds(jumpDelay);
+        yield return new WaitForSeconds(jumpDelay);
 
-rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
-isJumpStarting = false;
-}
+        isJumpStarting = false;
+    }
 
-void HandleBoredom()
-{
-if (Mathf.Abs(moveX) < 0.01f && isGrounded && !isJumpStarting)
-{
-idleTimer += Time.deltaTime;
+    void HandleBoredom()
+    {
+        if (Mathf.Abs(moveX) < 0.01f && isGrounded && !isJumpStarting)
+        {
+            idleTimer += Time.deltaTime;
 
-if (idleTimer >= timeToWait)
-anim.SetBool("isBored", true);
-}
-else
-{
-idleTimer = 0f;
-anim.SetBool("isBored", false);
-}
-}
+            if (idleTimer >= timeToWait)
+                anim.SetBool("isBored", true);
+        }
+        else
+        {
+            idleTimer = 0f;
+            anim.SetBool("isBored", false);
+        }
+    }
 
-public void OnLanding()
-{
-OnLandEvent.Invoke();
-idleTimer = 0f;
-}
+    public void OnLanding()
+    {
+        OnLandEvent.Invoke();
+        idleTimer = 0f;
+    }
 
-void FixedUpdate()
-{
-if (Mathf.Abs(moveX) > 0.01f)
-{
-rb.linearVelocity = new Vector2(
-moveX * moveSpeed,
-rb.linearVelocity.y
-);
-}
-}
+    void FixedUpdate()
+    {
+        if (Mathf.Abs(moveX) > 0.01f)
+        {
+            rb.linearVelocity = new Vector2(
+                moveX * moveSpeed * speedMultiplier,
+                rb.linearVelocity.y
+            );
+        }
+    }
 
-void Flip()
-{
-facingRight = !facingRight;
-Vector3 scale = transform.localScale;
-scale.x *= -1;
-transform.localScale = scale;
-}
+    void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+
+    // =========================
+    // ⚡ SPEED BOOST SYSTEM
+    // =========================
+
+    public void ApplySpeedBoost(float multiplier, float duration)
+    {
+        if (boostRoutine != null)
+            StopCoroutine(boostRoutine);
+
+        boostRoutine = StartCoroutine(SpeedBoostRoutine(multiplier, duration));
+    }
+
+    IEnumerator SpeedBoostRoutine(float multiplier, float duration)
+    {
+        speedMultiplier = multiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        speedMultiplier = 1f;
+    }
+
+    // =========================
+    // 🚀 BOOST PAD DETECTION (NO TAGS)
+    // =========================
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        TryApplyBoost(collision.gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        TryApplyBoost(collision.gameObject);
+    }
+
+    void TryApplyBoost(GameObject obj)
+    {
+        BoostPad pad = obj.GetComponent<BoostPad>();
+
+        if (pad != null)
+        {
+            ApplySpeedBoost(pad.boostMultiplier, pad.boostDuration);
+
+            Vector2 direction = obj.transform.right.normalized;
+            rb.AddForce(direction * pad.pushForce, ForceMode2D.Impulse);
+        }
+    }
 }

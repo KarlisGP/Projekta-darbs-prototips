@@ -8,6 +8,7 @@ TagManager:
   - Floor
   - Platform
   - NoJump
+  - BoostPad
   layers:
   - Default
   - TransparentFX
