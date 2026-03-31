@@ -1,121 +1,148 @@
 using UnityEngine;
-using System.Collections; // Required for Coroutines
+using System.Collections;
 using UnityEngine.Events;
 
-public class PlayerControllerBored : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    [Header("Movement")]
-    public float moveSpeed = 5f;
-    public float jumpForce = 10f;
-    public float jumpDelay = 0.2f; // How long to wait for the animation (e.g., 0.2 seconds)
-    private bool facingRight = true;
-    private bool isJumpStarting = false; // Prevents double-jumping during the delay
+[Header("Movement")]
+public float moveSpeed = 5f;
+public float jumpForce = 10f;
+public float jumpDelay = 0.2f;
 
-    [Header("Ground Check")]
-    public Transform groundCheck;
-    public float groundDistance = 0.2f;
-    public LayerMask groundMask;
+private float moveX;
+private bool facingRight = true;
+private bool isJumpStarting = false;
 
-    [Header("Boredom Settings")]
-    public float timeToWait = 5f; 
-    private float idleTimer = 0f;
+[Header("Ground Check")]
+public Transform groundCheck;
+public float groundDistance = 0.15f;
+public LayerMask groundMask;
 
-    [Header("Events")]
-    public UnityEvent OnLandEvent; 
+private bool isGrounded;
+private bool wasGrounded;
 
-    private Rigidbody2D rb;
-    private bool isGrounded;
-    private bool wasGrounded; 
-    private Animator anim;
-    private float moveX;
+[Header("Jump Restrictions")]
+public string noJumpTag = "NoJump"; // 👈 uses tag instead of layer
+private bool isOnNoJumpSurface;
 
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        if (OnLandEvent == null) OnLandEvent = new UnityEvent();
-    }
+[Header("Boredom Settings")]
+public float timeToWait = 5f;
+private float idleTimer = 0f;
 
-    void Update()
-    {
-        moveX = Input.GetAxis("Horizontal");
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundDistance, groundMask);
+[Header("Events")]
+public UnityEvent OnLandEvent;
 
-        // Landing detection
-        if (isGrounded && !wasGrounded)
-        {
-            OnLanding();
-        }
-        wasGrounded = isGrounded;
+private Rigidbody2D rb;
+private Animator anim;
 
-        // 1. Jump Input with Delay
-        if (Input.GetButtonDown("Jump") && isGrounded && !isJumpStarting)
-        {
-            StartCoroutine(JumpRoutine());
-        }
+void Start()
+{
+rb = GetComponent<Rigidbody2D>();
+anim = GetComponent<Animator>();
 
-        // 2. Flip Sprite Logic
-        if (moveX > 0 && !facingRight) Flip();
-        else if (moveX < 0 && facingRight) Flip();
+if (OnLandEvent == null)
+OnLandEvent = new UnityEvent();
+}
 
-        // 3. Boredom Logic
-        HandleBoredom();
+void Update()
+{
+moveX = Input.GetAxis("Horizontal");
 
-        // 4. Update Animation Parameters
-        anim.SetFloat("yVelocity", rb.linearVelocity.y);
-        anim.SetBool("isGrounded", isGrounded);
-        anim.SetFloat("Speed", Mathf.Abs(moveX));
-    }
+// Ground check
+Collider2D groundCollider = Physics2D.OverlapCircle(
+groundCheck.position,
+groundDistance,
+groundMask
+);
 
-    // This Coroutine handles the "Wind-up" before the jump
-    IEnumerator JumpRoutine()
-    {
-        isJumpStarting = true;
-        
-        // Play the "JumpStart" or "Crouch" animation trigger
-        anim.SetTrigger("JumpStart");
+isGrounded = groundCollider != null;
 
-        // Wait for the specified time
-        yield return new WaitForSeconds(jumpDelay);
+// ✅ TAG-BASED no jump detection
+isOnNoJumpSurface = groundCollider != null &&
+groundCollider.CompareTag(noJumpTag);
 
-        // Apply the physical jump force
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        
-        isJumpStarting = false;
-    }
+// Landing detection
+if (isGrounded && !wasGrounded)
+{
+OnLanding();
+}
+wasGrounded = isGrounded;
 
-    void HandleBoredom()
-    {
-        if (Mathf.Abs(moveX) < 0.01f && isGrounded && !isJumpStarting)
-        {
-            idleTimer += Time.deltaTime;
-            if (idleTimer >= timeToWait) anim.SetBool("isBored", true);
-        }
-        else
-        {
-            idleTimer = 0f;
-            anim.SetBool("isBored", false);
-        }
-    }
+// Jump (blocked if on NoJump tagged object)
+if (Input.GetButtonDown("Jump") && isGrounded &&
+!isJumpStarting && !isOnNoJumpSurface)
+{
+StartCoroutine(JumpRoutine());
+}
 
-    public void OnLanding()
-    {
-        OnLandEvent.Invoke();
-        idleTimer = 0;
-    }
+// Flip character
+if (moveX > 0 && !facingRight) Flip();
+else if (moveX < 0 && facingRight) Flip();
 
-    void FixedUpdate()
-    {
-        // We only move horizontally if we aren't in the middle of a jump wind-up 
-        // (Optional: remove !isJumpStarting if you want to allow sliding while winding up)
-        rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
-    }
+// Bored logic
+HandleBoredom();
 
-    private void Flip()
-    {
-        facingRight = !facingRight;
-        Vector3 scaler = transform.localScale;
-        scaler.x *= -1;
-        transform.localScale = scaler;
-    }
+// Animator updates
+anim.SetFloat("Speed", Mathf.Abs(moveX));
+anim.SetBool("isGrounded", isGrounded);
+anim.SetBool("isJumping", !isGrounded);
+anim.SetFloat("yVelocity", rb.linearVelocity.y);
+
+// Optional animation flag
+anim.SetBool("isOnNoJumpSurface", isOnNoJumpSurface);
+}
+
+IEnumerator JumpRoutine()
+{
+isJumpStarting = true;
+
+anim.SetTrigger("JumpStart");
+
+yield return new WaitForSeconds(jumpDelay);
+
+rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+
+isJumpStarting = false;
+}
+
+void HandleBoredom()
+{
+if (Mathf.Abs(moveX) < 0.01f && isGrounded && !isJumpStarting)
+{
+idleTimer += Time.deltaTime;
+
+if (idleTimer >= timeToWait)
+anim.SetBool("isBored", true);
+}
+else
+{
+idleTimer = 0f;
+anim.SetBool("isBored", false);
+}
+}
+
+public void OnLanding()
+{
+OnLandEvent.Invoke();
+idleTimer = 0f;
+}
+
+void FixedUpdate()
+{
+if (Mathf.Abs(moveX) > 0.01f)
+{
+rb.linearVelocity = new Vector2(
+moveX * moveSpeed,
+rb.linearVelocity.y
+);
+}
+}
+
+void Flip()
+{
+facingRight = !facingRight;
+Vector3 scale = transform.localScale;
+scale.x *= -1;
+transform.localScale = scale;
+}
 }

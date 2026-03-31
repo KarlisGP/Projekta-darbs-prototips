@@ -1944,7 +1944,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &464589454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1959,11 +1959,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 15
   jumpForce: 25
+  jumpDelay: 0.2
   groundCheck: {fileID: 48752695}
   groundDistance: 0.3
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  noJumpTag: NoJump
+  timeToWait: 5
+  OnLandEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &464589455
 BoxCollider2D:
   m_ObjectHideFlags: 0
