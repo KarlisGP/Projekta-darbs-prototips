@@ -58,12 +58,10 @@ public class PlayerController : MonoBehaviour
             groundDistance,
             groundMask
         );
-
         isGrounded = groundCollider != null;
 
         // No-jump detection
-        isOnNoJumpSurface = groundCollider != null &&
-                           groundCollider.CompareTag(noJumpTag);
+        isOnNoJumpSurface = groundCollider != null && groundCollider.CompareTag(noJumpTag);
 
         // Landing detection
         if (isGrounded && !wasGrounded)
@@ -72,9 +70,8 @@ public class PlayerController : MonoBehaviour
         }
         wasGrounded = isGrounded;
 
-        // Jump
-        if (Input.GetButtonDown("Jump") && isGrounded &&
-            !isJumpStarting && !isOnNoJumpSurface)
+        // Jump Input
+        if (Input.GetButtonDown("Jump") && isGrounded && !isJumpStarting && !isOnNoJumpSurface)
         {
             StartCoroutine(JumpRoutine());
         }
@@ -83,27 +80,31 @@ public class PlayerController : MonoBehaviour
         if (moveX > 0 && !facingRight) Flip();
         else if (moveX < 0 && facingRight) Flip();
 
-        // Bored logic
         HandleBoredom();
 
-        // Animator updates
+        // ==========================================
+        // ⚡ ANIMATOR UPDATES (VELOCITY BASED)
+        // ==========================================
+        
         anim.SetFloat("Speed", Mathf.Abs(moveX));
         anim.SetBool("isGrounded", isGrounded);
-        anim.SetBool("isJumping", !isGrounded);
+        
+        // This is the "Y change" logic you asked for:
+        // We pass the raw Y velocity. 
+        // In the Animator, you can now check if this is > 0.1 (Rising) or < -0.1 (Falling)
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
-        anim.SetBool("isOnNoJumpSurface", isOnNoJumpSurface);
+
+        // Optional: A bool that is true whenever the player is NOT on the ground and moving vertically
+        bool isAirborne = !isGrounded && Mathf.Abs(rb.linearVelocity.y) > 0.1f;
+        anim.SetBool("IsJumping", isAirborne); 
     }
 
     IEnumerator JumpRoutine()
     {
         isJumpStarting = true;
-
         anim.SetTrigger("JumpStart");
-
         yield return new WaitForSeconds(jumpDelay);
-
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-
         isJumpStarting = false;
     }
 
@@ -112,7 +113,6 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(moveX) < 0.01f && isGrounded && !isJumpStarting)
         {
             idleTimer += Time.deltaTime;
-
             if (idleTimer >= timeToWait)
                 anim.SetBool("isBored", true);
         }
@@ -131,13 +131,9 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Mathf.Abs(moveX) > 0.01f)
-        {
-            rb.linearVelocity = new Vector2(
-                moveX * moveSpeed * speedMultiplier,
-                rb.linearVelocity.y
-            );
-        }
+        // Smooth horizontal movement that doesn't break Y physics
+        float targetVelocityX = moveX * moveSpeed * speedMultiplier;
+        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
     }
 
     void Flip()
@@ -148,49 +144,28 @@ public class PlayerController : MonoBehaviour
         transform.localScale = scale;
     }
 
-    // =========================
-    // ⚡ SPEED BOOST SYSTEM
-    // =========================
-
     public void ApplySpeedBoost(float multiplier, float duration)
     {
-        if (boostRoutine != null)
-            StopCoroutine(boostRoutine);
-
+        if (boostRoutine != null) StopCoroutine(boostRoutine);
         boostRoutine = StartCoroutine(SpeedBoostRoutine(multiplier, duration));
     }
 
     IEnumerator SpeedBoostRoutine(float multiplier, float duration)
     {
         speedMultiplier = multiplier;
-
         yield return new WaitForSeconds(duration);
-
         speedMultiplier = 1f;
     }
 
-    // =========================
-    // 🚀 BOOST PAD DETECTION (NO TAGS)
-    // =========================
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        TryApplyBoost(collision.gameObject);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        TryApplyBoost(collision.gameObject);
-    }
+    private void OnTriggerEnter2D(Collider2D collision) => TryApplyBoost(collision.gameObject);
+    private void OnCollisionEnter2D(Collision2D collision) => TryApplyBoost(collision.gameObject);
 
     void TryApplyBoost(GameObject obj)
     {
         BoostPad pad = obj.GetComponent<BoostPad>();
-
         if (pad != null)
         {
             ApplySpeedBoost(pad.boostMultiplier, pad.boostDuration);
-
             Vector2 direction = obj.transform.right.normalized;
             rb.AddForce(direction * pad.pushForce, ForceMode2D.Impulse);
         }
