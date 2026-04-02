@@ -3,16 +3,13 @@ using UnityEngine.SceneManagement;
 
 public class DestructiveCube : MonoBehaviour
 {
-    [Header("Game Over UI")]
-    public GameObject gameOverScreen;
-
     private static bool gameIsOver = false;
+    private GameUIManager uiManager;
 
     void Start()
     {
         gameIsOver = false;
-        if (gameOverScreen != null)
-            gameOverScreen.SetActive(false);
+        uiManager = FindObjectOfType<GameUIManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -39,8 +36,8 @@ public class DestructiveCube : MonoBehaviour
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null) rb.linearVelocity = Vector2.zero;
 
-        if (gameOverScreen != null)
-            gameOverScreen.SetActive(true);
+        if (uiManager != null)
+            uiManager.ShowDeathScreen();
         else
             Invoke("ReloadScene", 1f);
     }

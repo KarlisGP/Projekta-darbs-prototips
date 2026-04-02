@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/menu.unity
     guid: ad4c9912c3f70f848b23ce6c448fd007
   - enabled: 1
+    path: Assets/Scenes/Final level.unity
+    guid: 85b3ed1d1d8e8d54593e30de0bc6205e
+  - enabled: 0
     path: Assets/Scenes/Fruic claw.unity
     guid: dbf6757421b9d0c458fa2b5c2122b861
   m_configObjects:

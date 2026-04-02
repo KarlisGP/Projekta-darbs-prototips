@@ -2,14 +2,21 @@ using UnityEngine;
 
 public class WinTrigger : MonoBehaviour
 {
-    public GameObject winScreen;
+    public LayerMask playerLayer;
+    private GameUIManager uiManager;
+    private bool hasWon = false;
 
-    private void OnTriggerEnter(Collider other)
+    void Start()
     {
-        if (other.CompareTag("Player"))
+        uiManager = FindObjectOfType<GameUIManager>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (((1 << other.gameObject.layer) & playerLayer) != 0 && !hasWon)
         {
-            winScreen.SetActive(true);
-            Time.timeScale = 0f;
+            hasWon = true;
+            uiManager.ShowWinScreen();
         }
     }
 }
