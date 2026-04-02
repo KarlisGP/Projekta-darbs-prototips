@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2520022888718445630}
   m_Layer: 0
   m_Name: sticky
-  m_TagString: NoJump
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -143,4 +143,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NaturalTumble
   minRotationSpeed: 20
   maxRotationSpeed: 20
-  randomizeStartRotation: 1
+  randomizeStartRotation: 0

@@ -226,4 +226,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NaturalTumble
   minRotationSpeed: 20
   maxRotationSpeed: 20
-  randomizeStartRotation: 1
+  randomizeStartRotation: 0

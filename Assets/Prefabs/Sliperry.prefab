@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8914418809188804065}
   m_Layer: 0
   m_Name: Sliperry
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.07374536, w: 0.9972772}
   m_LocalPosition: {x: -0.348, y: 32.7479, z: 0}
-  m_LocalScale: {x: 3.7096756, y: 3.7255077, z: 1}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -153,4 +153,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NaturalTumble
   minRotationSpeed: 20
   maxRotationSpeed: 20
-  randomizeStartRotation: 1
+  randomizeStartRotation: 0
