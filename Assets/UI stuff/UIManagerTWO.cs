@@ -7,7 +7,6 @@ public class UIManagerTWO : MonoBehaviour
     [Header("Screens")]
     public GameObject startScreen;
     public GameObject deathScreen;
-    public GameObject pauseMenu;
     public GameObject winScreen;
     public GameObject settingsScreen;
 
@@ -28,20 +27,11 @@ public class UIManagerTWO : MonoBehaviour
     public Sprite unmuteSprite;
     public Image muteButtonImage;
 
-    private bool isPaused = false;
     private int currentSlide = 0;
 
     void Start()
     {
         ShowStartScreen();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePause();
-        }
     }
 
     // --- Helper ---
@@ -55,7 +45,6 @@ public class UIManagerTWO : MonoBehaviour
     {
         startScreen.SetActive(true);
         deathScreen.SetActive(false);
-        pauseMenu.SetActive(false);
         winScreen.SetActive(false);
         settingsScreen.SetActive(false);
         tutorialScreen.SetActive(false);
@@ -63,19 +52,12 @@ public class UIManagerTWO : MonoBehaviour
 
     public void OnStartButton()
     {
-        Debug.Log("Start button pressed");
-        Debug.Log("tutorialScreen: " + tutorialScreen);
-        Debug.Log("tutorialSlides length: " + tutorialSlides.Length);
-        Debug.Log("tutorialImage: " + tutorialImage);
-    
         PlayClick();
         menuMusic.Stop();
         startScreen.SetActive(false);
         currentSlide = 0;
         tutorialScreen.SetActive(true);
-        Debug.Log("tutorialScreen active: " + tutorialScreen.activeSelf);
         tutorialImage.sprite = tutorialSlides[currentSlide];
-        Debug.Log("Slide set to: " + tutorialSlides[currentSlide].name);
     }
 
     // --- Tutorial ---
@@ -140,22 +122,6 @@ public class UIManagerTWO : MonoBehaviour
     {
         PlayClick();
         settingsScreen.SetActive(false);
-    }
-
-    // --- Pause ---
-    public void TogglePause()
-    {
-        isPaused = !isPaused;
-        pauseMenu.SetActive(isPaused);
-        Time.timeScale = isPaused ? 0f : 1f;
-    }
-
-    public void OnResumeButton()
-    {
-        PlayClick();
-        isPaused = false;
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1f;
     }
 
     public void OnQuitButton()
