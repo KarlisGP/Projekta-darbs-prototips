@@ -13,6 +13,15 @@ public class PlayerController : MonoBehaviour
     private bool facingRight = true;
     private bool isJumpStarting = false;
 
+    [Header("Extra Jump")]
+    public int extraJumpsAllowed = 0;
+    private int extraJumpsRemaining;
+
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip groundJumpSound;
+    public AudioClip airJumpSound;
+
     [Header("Speed Boost")]
     public float speedMultiplier = 1f;
     private Coroutine boostRoutine;
@@ -52,7 +61,6 @@ public class PlayerController : MonoBehaviour
     {
         moveX = Input.GetAxis("Horizontal");
 
-        // Ground check
         Collider2D groundCollider = Physics2D.OverlapCircle(
             groundCheck.position,
             groundDistance,
@@ -60,51 +68,60 @@ public class PlayerController : MonoBehaviour
         );
         isGrounded = groundCollider != null;
 
-        // No-jump detection
         isOnNoJumpSurface = groundCollider != null && groundCollider.CompareTag(noJumpTag);
 
-        // Landing detection
         if (isGrounded && !wasGrounded)
         {
             OnLanding();
         }
         wasGrounded = isGrounded;
 
-        // Jump Input
-        if (Input.GetButtonDown("Jump") && isGrounded && !isJumpStarting && !isOnNoJumpSurface)
+        // ✅ JUMP LOGIC (ground + mid-air)
+        if (Input.GetButtonDown("Jump") && !isJumpStarting && !isOnNoJumpSurface)
         {
-            StartCoroutine(JumpRoutine());
+            if (isGrounded)
+            {
+                StartCoroutine(JumpRoutine(true));
+            }
+            else if (extraJumpsRemaining > 0)
+            {
+                extraJumpsRemaining--;
+                StartCoroutine(JumpRoutine(false));
+            }
         }
 
-        // Flip character
         if (moveX > 0 && !facingRight) Flip();
         else if (moveX < 0 && facingRight) Flip();
 
         HandleBoredom();
 
-        // ==========================================
-        // ⚡ ANIMATOR UPDATES (VELOCITY BASED)
-        // ==========================================
-        
         anim.SetFloat("Speed", Mathf.Abs(moveX));
         anim.SetBool("isGrounded", isGrounded);
-        
-        // This is the "Y change" logic you asked for:
-        // We pass the raw Y velocity. 
-        // In the Animator, you can now check if this is > 0.1 (Rising) or < -0.1 (Falling)
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
 
-        // Optional: A bool that is true whenever the player is NOT on the ground and moving vertically
         bool isAirborne = !isGrounded && Mathf.Abs(rb.linearVelocity.y) > 0.1f;
-        anim.SetBool("IsJumping", isAirborne); 
+        anim.SetBool("IsJumping", isAirborne);
     }
 
-    IEnumerator JumpRoutine()
+    IEnumerator JumpRoutine(bool isGroundJump)
     {
         isJumpStarting = true;
+
         anim.SetTrigger("JumpStart");
+
+        // 🔊 PLAY CORRECT SOUND
+        if (audioSource != null)
+        {
+            if (isGroundJump && groundJumpSound != null)
+                audioSource.PlayOneShot(groundJumpSound);
+            else if (!isGroundJump && airJumpSound != null)
+                audioSource.PlayOneShot(airJumpSound);
+        }
+
         yield return new WaitForSeconds(jumpDelay);
+
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+
         isJumpStarting = false;
     }
 
@@ -127,11 +144,13 @@ public class PlayerController : MonoBehaviour
     {
         OnLandEvent.Invoke();
         idleTimer = 0f;
+
+        // ✅ Reset extra jumps
+        extraJumpsRemaining = extraJumpsAllowed;
     }
 
     void FixedUpdate()
     {
-        // Smooth horizontal movement that doesn't break Y physics
         float targetVelocityX = moveX * moveSpeed * speedMultiplier;
         rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
     }
@@ -155,6 +174,13 @@ public class PlayerController : MonoBehaviour
         speedMultiplier = multiplier;
         yield return new WaitForSeconds(duration);
         speedMultiplier = 1f;
+    }
+
+    // ✅ Called by platform
+    public void GiveExtraJump(int amount)
+    {
+        extraJumpsAllowed = amount;
+        extraJumpsRemaining = amount;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) => TryApplyBoost(collision.gameObject);
