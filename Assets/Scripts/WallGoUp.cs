@@ -13,5 +13,8 @@ public class WallGoUp : MonoBehaviour
     void FixedUpdate()
     {
         rb.linearVelocity = Vector2.up * speed;
+        Debug.Log(gameObject.name + " is moving at speed: " + speed);
+        rb.linearVelocity = Vector2.up * speed;
     }
+    
 }
