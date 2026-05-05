@@ -9,6 +9,7 @@ TagManager:
   - Platform
   - NoJump
   - BoostPad
+  - Ice
   layers:
   - Default
   - TransparentFX
