@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private float moveX;
     private bool facingRight = true;
     private bool isJumpStarting = false;
+    private float pushRecoveryTimer = 0f;
 
     [Header("Extra Jump")]
     public int extraJumpsAllowed = 0;
@@ -152,9 +153,19 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         float targetVelocityX = moveX * moveSpeed * speedMultiplier;
-        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
-    }
 
+        // ONLY force the velocity if the player is actually pressing a move key
+        // This allows the Ice script to take over when the player lets go
+        if (Mathf.Abs(moveX) > 0.01f)
+        {
+            rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
+        }
+        
+    }
+    public void TemporaryLoseControl(float duration)
+    {
+        pushRecoveryTimer = duration;
+    }
     void Flip()
     {
         facingRight = !facingRight;
