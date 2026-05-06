@@ -11,6 +11,7 @@ public class UIManagerTWO : MonoBehaviour
     public GameObject winScreen;
     public GameObject settingsScreen;
     public GameObject levelSelectorScreen;
+    public GameObject pauseMenu;
 
     [Header("Tutorial")]
     public GameObject tutorialScreen;
@@ -30,10 +31,20 @@ public class UIManagerTWO : MonoBehaviour
     public Image muteButtonImage;
 
     private int currentSlide = 0;
+    private bool isPaused = false;
+    private bool gameIsActive = false;
 
     void Start()
     {
         ShowStartScreen();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
     }
 
     void PlayClick()
@@ -55,6 +66,8 @@ public class UIManagerTWO : MonoBehaviour
         settingsScreen.SetActive(false);
         tutorialScreen.SetActive(false);
         levelSelectorScreen.SetActive(false);
+        pauseMenu.SetActive(false);
+        gameIsActive = false;
     }
 
     // --- Start Button ---
@@ -108,14 +121,37 @@ public class UIManagerTWO : MonoBehaviour
     // --- Death & Win ---
     public void ShowDeathScreen()
     {
+        gameIsActive = false;
         deathScreen.SetActive(true);
         Time.timeScale = 0f;
     }
 
     public void ShowWinScreen()
     {
+        gameIsActive = false;
         winScreen.SetActive(true);
         Time.timeScale = 0f;
+    }
+
+    // --- Pause ---
+    public void TogglePause()
+    {
+        if (!gameIsActive) return;
+        isPaused = !isPaused;
+        pauseMenu.SetActive(isPaused);
+        Time.timeScale = isPaused ? 0f : 1f;
+    }
+
+    public void OnResumeButton()
+    {
+        isPaused = false;
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    public void OnPauseButton()
+    {
+        TogglePause();
     }
 
     // --- Shared Buttons ---
