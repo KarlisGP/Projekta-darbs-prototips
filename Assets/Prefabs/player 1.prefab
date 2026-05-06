@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3413365498991467400}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ground check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 5055001315593274997}
   - component: {fileID: 3303228268307559738}
   - component: {fileID: 7831969033030213757}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: player 1
   m_TagString: Player
   m_Icon: {fileID: 0}
