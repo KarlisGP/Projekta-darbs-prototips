@@ -1681,6 +1681,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 353262110}
     m_Modifications:
+    - target: {fileID: -3213654107677701915, guid: a54c336331d4ae344b381cf9256b63a5, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 2064183766}
+    - target: {fileID: -3213654107677701915, guid: a54c336331d4ae344b381cf9256b63a5, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 2064183763}
+    - target: {fileID: -3213654107677701915, guid: a54c336331d4ae344b381cf9256b63a5, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 66819197543898949, guid: a54c336331d4ae344b381cf9256b63a5, type: 3}
       propertyPath: m_LocalScale.x
       value: 8.934348
@@ -1824,6 +1836,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3413365498991467400, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413365498991467400, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.31
+      objectReference: {fileID: 0}
     - target: {fileID: 5119977182641347192, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -68.64
@@ -1868,9 +1888,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: player 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 2092527506}
+    - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: airJumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: bc3d6875bbfa4b54c9124d39060b052e, type: 3}
+    - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: groundJumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: bc3d6875bbfa4b54c9124d39060b052e, type: 3}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 8023549999832685652, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
@@ -3291,7 +3322,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -3376,9 +3407,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &2064183766 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: -7491079815909675482, guid: a54c336331d4ae344b381cf9256b63a5, type: 3}
+  m_PrefabInstance: {fileID: 1110472126}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2092527504 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5119977182641347192, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+  m_PrefabInstance: {fileID: 1152397122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &2092527506 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3303228268307559738, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
   m_PrefabInstance: {fileID: 1152397122}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2092719731

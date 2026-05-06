@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3313670912555859425}
   - component: {fileID: 2643411182724270215}
   - component: {fileID: 6512666282672836624}
+  - component: {fileID: 4375515382445263555}
   m_Layer: 0
   m_Name: Bouncy
   m_TagString: Platform
@@ -159,3 +160,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bouncy
   bounceForce: 70
+--- !u!114 &4375515382445263555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5781073591892735730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f6326c0d23ff44895bf61bc67ca196, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JumpPad
+  launchForce: 70
+  launchSound: {fileID: 8300000, guid: 00711f1ca97d9cd4f85825e08df4d590, type: 3}

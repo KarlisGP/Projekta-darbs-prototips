@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8914418809188804065}
   - component: {fileID: 4910040696750117338}
   - component: {fileID: 8540944920209818050}
+  - component: {fileID: 4613408099881174634}
   m_Layer: 6
   m_Name: Sliperry
   m_TagString: Platform
@@ -171,3 +172,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IcePlatform
   iceSpeedBoost: 2
   slipperyEffect: 1
+--- !u!114 &4613408099881174634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5035890601526711007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a68ebf1ede8c54e87db1a2a66c2502, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlatformMaterial
+  jumpSound: {fileID: 8300000, guid: 6aeeac762a13e4e458f59edb89fa8b92, type: 3}

@@ -7,21 +7,20 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
-    public float jumpDelay = 0.2f;
+    public float jumpDelay = 0.1f;
 
     private float moveX;
     private bool facingRight = true;
     private bool isJumpStarting = false;
-    private float pushRecoveryTimer = 0f;
 
     [Header("Extra Jump")]
-    public int baseExtraJumps = 0; // Set this to 0 in Inspector
-    private int extraJumpsAllowed; // This will now be our "Current Max"
+    public int baseExtraJumps = 0; 
+    private int extraJumpsAllowed; 
     private int extraJumpsRemaining;
 
     [Header("Audio")]
     public AudioSource audioSource;
-    public AudioClip groundJumpSound;
+    public AudioClip defaultJumpSound; 
     public AudioClip airJumpSound;
 
     [Header("Speed Boost")]
@@ -55,43 +54,41 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        // Start with our base allowed jumps
         extraJumpsAllowed = baseExtraJumps; 
+        extraJumpsRemaining = extraJumpsAllowed;
 
-        if (OnLandEvent == null)
-            OnLandEvent = new UnityEvent();
+        if (OnLandEvent == null) OnLandEvent = new UnityEvent();
     }
 
     void Update()
     {
         moveX = Input.GetAxis("Horizontal");
 
+        if (groundCheck == null) return;
+
         Collider2D groundCollider = Physics2D.OverlapCircle(
             groundCheck.position,
             groundDistance,
             groundMask
         );
+        
         isGrounded = groundCollider != null;
-
         isOnNoJumpSurface = groundCollider != null && groundCollider.CompareTag(noJumpTag);
 
-        if (isGrounded && !wasGrounded)
-        {
-            OnLanding();
-        }
+        if (isGrounded && !wasGrounded) OnLanding();
         wasGrounded = isGrounded;
 
-        // ✅ JUMP LOGIC (ground + mid-air)
+        // JUMP LOGIC
         if (Input.GetButtonDown("Jump") && !isJumpStarting && !isOnNoJumpSurface)
         {
             if (isGrounded)
             {
-                StartCoroutine(JumpRoutine(true));
+                StartCoroutine(JumpRoutine(true, groundCollider));
             }
             else if (extraJumpsRemaining > 0)
             {
                 extraJumpsRemaining--;
-                StartCoroutine(JumpRoutine(false));
+                StartCoroutine(JumpRoutine(false, null));
             }
         }
 
@@ -100,33 +97,42 @@ public class PlayerController : MonoBehaviour
 
         HandleBoredom();
 
-        anim.SetFloat("Speed", Mathf.Abs(moveX));
-        anim.SetBool("isGrounded", isGrounded);
-        anim.SetFloat("yVelocity", rb.linearVelocity.y);
-
-        bool isAirborne = !isGrounded && Mathf.Abs(rb.linearVelocity.y) > 0.1f;
-        anim.SetBool("IsJumping", isAirborne);
+        if (anim != null)
+        {
+            anim.SetFloat("Speed", Mathf.Abs(moveX));
+            anim.SetBool("isGrounded", isGrounded);
+            anim.SetFloat("yVelocity", rb.linearVelocity.y);
+            anim.SetBool("IsJumping", !isGrounded && Mathf.Abs(rb.linearVelocity.y) > 0.1f);
+        }
     }
 
-    IEnumerator JumpRoutine(bool isGroundJump)
+    IEnumerator JumpRoutine(bool isGroundJump, Collider2D platformCollider)
     {
         isJumpStarting = true;
+        if (anim != null) anim.SetTrigger("JumpStart");
 
-        anim.SetTrigger("JumpStart");
-
-        // 🔊 PLAY CORRECT SOUND
+        // 🔊 DYNAMIC SOUND LOGIC
         if (audioSource != null)
         {
-            if (isGroundJump && groundJumpSound != null)
-                audioSource.PlayOneShot(groundJumpSound);
-            else if (!isGroundJump && airJumpSound != null)
-                audioSource.PlayOneShot(airJumpSound);
+            AudioClip clipToPlay = null;
+
+            if (isGroundJump && platformCollider != null)
+            {
+                // Check if platform has a specific sound
+                PlatformMaterial platMat = platformCollider.GetComponent<PlatformMaterial>();
+                clipToPlay = (platMat != null && platMat.jumpSound != null) ? platMat.jumpSound : defaultJumpSound;
+            }
+            else if (!isGroundJump)
+            {
+                clipToPlay = airJumpSound;
+            }
+
+            if (clipToPlay != null) audioSource.PlayOneShot(clipToPlay);
         }
 
         yield return new WaitForSeconds(jumpDelay);
 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-
         isJumpStarting = false;
     }
 
@@ -135,13 +141,12 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(moveX) < 0.01f && isGrounded && !isJumpStarting)
         {
             idleTimer += Time.deltaTime;
-            if (idleTimer >= timeToWait)
-                anim.SetBool("isBored", true);
+            if (idleTimer >= timeToWait && anim != null) anim.SetBool("isBored", true);
         }
         else
         {
             idleTimer = 0f;
-            anim.SetBool("isBored", false);
+            if (anim != null) anim.SetBool("isBored", false);
         }
     }
 
@@ -149,36 +154,30 @@ public class PlayerController : MonoBehaviour
     {
         OnLandEvent.Invoke();
         idleTimer = 0f;
-
-        // Reset our allowed jumps back to the base (0) 
         extraJumpsAllowed = baseExtraJumps;
-    
-        // Reset the remaining jumps to that base
         extraJumpsRemaining = extraJumpsAllowed;
     }
 
     void FixedUpdate()
     {
-        float targetVelocityX = moveX * moveSpeed * speedMultiplier;
-
-        // ONLY force the velocity if the player is actually pressing a move key
-        // This allows the Ice script to take over when the player lets go
         if (Mathf.Abs(moveX) > 0.01f)
         {
-            rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
+            rb.linearVelocity = new Vector2(moveX * moveSpeed * speedMultiplier, rb.linearVelocity.y);
         }
-        
     }
-    public void TemporaryLoseControl(float duration)
-    {
-        pushRecoveryTimer = duration;
-    }
+
     void Flip()
     {
         facingRight = !facingRight;
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+
+    public void GiveExtraJump(int amount)
+    {
+        extraJumpsAllowed = amount;
+        extraJumpsRemaining = amount;
     }
 
     public void ApplySpeedBoost(float multiplier, float duration)
@@ -194,24 +193,26 @@ public class PlayerController : MonoBehaviour
         speedMultiplier = 1f;
     }
 
-    // ✅ Called by platform
-    public void GiveExtraJump(int amount)
-    {
-        extraJumpsAllowed = amount;
-        extraJumpsRemaining = amount;
-    }
-
+    // ✅ TRIGGER BOOST PADS
     private void OnTriggerEnter2D(Collider2D collision) => TryApplyBoost(collision.gameObject);
     private void OnCollisionEnter2D(Collision2D collision) => TryApplyBoost(collision.gameObject);
 
     void TryApplyBoost(GameObject obj)
     {
+        // 1. Existing Force/Speed logic (from your BoostPad script)
         BoostPad pad = obj.GetComponent<BoostPad>();
         if (pad != null)
         {
             ApplySpeedBoost(pad.boostMultiplier, pad.boostDuration);
             Vector2 direction = obj.transform.right.normalized;
             rb.AddForce(direction * pad.pushForce, ForceMode2D.Impulse);
+
+            // 🔊 2. Play unique sound for this pad
+            JumpPadSound padSound = obj.GetComponent<JumpPadSound>();
+            if (padSound != null && audioSource != null && padSound.launchSound != null)
+            {
+                audioSource.PlayOneShot(padSound.launchSound);
+            }
         }
     }
 }
