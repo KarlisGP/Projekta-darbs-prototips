@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UIManagerTWO : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class UIManagerTWO : MonoBehaviour
     public GameObject deathScreen;
     public GameObject winScreen;
     public GameObject settingsScreen;
+    public GameObject levelSelectorScreen;
 
     [Header("Tutorial")]
     public GameObject tutorialScreen;
@@ -34,13 +36,17 @@ public class UIManagerTWO : MonoBehaviour
         ShowStartScreen();
     }
 
-    // --- Helper ---
     void PlayClick()
     {
         sfxSource.PlayOneShot(buttonClick);
     }
 
-    // --- Start Screen ---
+    IEnumerator LoadWithDelay(int sceneIndex)
+    {
+        yield return new WaitForSecondsRealtime(0.3f);
+        SceneManager.LoadScene(sceneIndex);
+    }
+
     public void ShowStartScreen()
     {
         startScreen.SetActive(true);
@@ -48,16 +54,31 @@ public class UIManagerTWO : MonoBehaviour
         winScreen.SetActive(false);
         settingsScreen.SetActive(false);
         tutorialScreen.SetActive(false);
+        levelSelectorScreen.SetActive(false);
     }
 
+    // --- Start Button ---
     public void OnStartButton()
     {
         PlayClick();
         menuMusic.Stop();
         startScreen.SetActive(false);
-        currentSlide = 0;
-        tutorialScreen.SetActive(true);
-        tutorialImage.sprite = tutorialSlides[currentSlide];
+        levelSelectorScreen.SetActive(true);
+    }
+
+    // --- Level Selector ---
+    public void LoadLevel1() { PlayClick(); StartCoroutine(LoadWithDelay(1)); }
+    public void LoadLevel2() { PlayClick(); StartCoroutine(LoadWithDelay(2)); }
+    public void LoadLevel3() { PlayClick(); StartCoroutine(LoadWithDelay(3)); }
+    public void LoadLevel4() { PlayClick(); StartCoroutine(LoadWithDelay(4)); }
+    public void LoadLevel5() { PlayClick(); StartCoroutine(LoadWithDelay(5)); }
+
+    public void OnLevelSelectorBackButton()
+    {
+        PlayClick();
+        levelSelectorScreen.SetActive(false);
+        startScreen.SetActive(true);
+        menuMusic.Play();
     }
 
     // --- Tutorial ---
@@ -69,7 +90,7 @@ public class UIManagerTWO : MonoBehaviour
         if (currentSlide >= tutorialSlides.Length)
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene(1);
+            StartCoroutine(LoadWithDelay(1));
         }
         else
         {
@@ -81,7 +102,7 @@ public class UIManagerTWO : MonoBehaviour
     {
         PlayClick();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(1);
+        StartCoroutine(LoadWithDelay(1));
     }
 
     // --- Death & Win ---
@@ -102,14 +123,23 @@ public class UIManagerTWO : MonoBehaviour
     {
         PlayClick();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        StartCoroutine(LoadWithDelay(SceneManager.GetActiveScene().buildIndex));
     }
 
     public void OnMainMenuButton()
     {
         PlayClick();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
+        StartCoroutine(LoadWithDelay(0));
+    }
+
+    public void OnBackButton()
+    {
+        PlayClick();
+        Time.timeScale = 1f;
+        int previousScene = SceneManager.GetActiveScene().buildIndex - 1;
+        if (previousScene < 0) previousScene = 0;
+        StartCoroutine(LoadWithDelay(previousScene));
     }
 
     public void OnSettingsButton()
@@ -130,7 +160,6 @@ public class UIManagerTWO : MonoBehaviour
         Application.Quit();
     }
 
-    // --- Mute ---
     public void OnMuteButton()
     {
         PlayClick();
