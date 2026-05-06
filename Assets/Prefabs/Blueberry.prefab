@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5504976553502812449}
   - component: {fileID: 1373221914555473223}
   - component: {fileID: -7491079815909675482}
+  - component: {fileID: -3213654107677701915}
   m_Layer: 6
   m_Name: Blueberry
   m_TagString: Platform
@@ -242,3 +243,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3213654107677701915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6871721958680226660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d409436205ef8d4183c1579b7fec300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JumpSoundHandler
+  rb: {fileID: 0}
+  audioSource: {fileID: 0}
+  jumpSound: {fileID: 0}
+  groundCheck: {fileID: 0}
+  groundDistance: 0.15
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
