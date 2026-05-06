@@ -76,9 +76,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a14845d82b2ced94987ff831f7231536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoostPad
-  boostMultiplier: 2
+  boostMultiplier: 6
   boostDuration: 7
-  pushForce: 5
+  pushForce: 4
 --- !u!212 &1408851848013295239
 SpriteRenderer:
   serializedVersion: 2
