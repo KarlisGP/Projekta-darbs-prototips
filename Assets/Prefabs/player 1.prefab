@@ -201,7 +201,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 54f552d691f762f4aa8de9e3400c13ec, type: 2}
+  m_Material: {fileID: 6200000, guid: 1ae549ffd0cf67742a4d64c89b028f3a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -277,6 +277,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 10
+  acceleration: 60
+  deceleration: 70
   jumpForce: 80
   jumpDelay: 0
   extraJumpsAllowed: 0
@@ -290,7 +292,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 72
   noJumpTag: NoJump
-  timeToWait: 5
   OnLandEvent:
     m_PersistentCalls:
       m_Calls: []

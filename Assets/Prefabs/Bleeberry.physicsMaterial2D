@@ -6,9 +6,9 @@ PhysicsMaterial2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sliperry
+  m_Name: Bleeberry
   serializedVersion: 2
-  friction: 100
+  friction: 0.8
   bounciness: 0
-  m_FrictionCombine: 4
-  m_BounceCombine: 2
+  m_FrictionCombine: 2
+  m_BounceCombine: 3
