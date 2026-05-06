@@ -15,7 +15,8 @@ public class PlayerController : MonoBehaviour
     private float pushRecoveryTimer = 0f;
 
     [Header("Extra Jump")]
-    public int extraJumpsAllowed = 0;
+    public int baseExtraJumps = 0; // Set this to 0 in Inspector
+    private int extraJumpsAllowed; // This will now be our "Current Max"
     private int extraJumpsRemaining;
 
     [Header("Audio")]
@@ -53,6 +54,9 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
+        // Start with our base allowed jumps
+        extraJumpsAllowed = baseExtraJumps; 
 
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
@@ -146,7 +150,10 @@ public class PlayerController : MonoBehaviour
         OnLandEvent.Invoke();
         idleTimer = 0f;
 
-        // ✅ Reset extra jumps
+        // Reset our allowed jumps back to the base (0) 
+        extraJumpsAllowed = baseExtraJumps;
+    
+        // Reset the remaining jumps to that base
         extraJumpsRemaining = extraJumpsAllowed;
     }
 
