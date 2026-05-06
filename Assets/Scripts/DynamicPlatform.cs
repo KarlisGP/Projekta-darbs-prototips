@@ -37,15 +37,16 @@ public class DynamicPlatform : MonoBehaviour
             sr.color = isJumpMode ? Color.green : Color.red;
     }
 
+    // Handles the instant transition when first touching the platform
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
 
         Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
+        PlayerController player = collision.gameObject.GetComponent<PlayerController>();
 
         if (isJumpMode)
         {
-            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if (player != null)
             {
                 player.GiveExtraJump(1);
@@ -59,12 +60,26 @@ public class DynamicPlatform : MonoBehaviour
                 playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, -1f);
 
                 // 2. Apply a downward push (using transform.up * -1 handles the rotation)
-                // This pushes the player "away" from the platform's surface
                 playerRb.AddForce(-transform.up * downwardForce, ForceMode2D.Impulse);
             }
 
             // 3. Start the disappearing routine
             StartCoroutine(DisablePlatform());
+        }
+    }
+
+    // Keeps granting the jump while standing here, overriding the player's land-reset
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        if (isJumpMode)
+        {
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.GiveExtraJump(1);
+            }
         }
     }
 
