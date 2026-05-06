@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameUIManager : MonoBehaviour
 {
@@ -25,6 +26,12 @@ public class GameUIManager : MonoBehaviour
         {
             TogglePause();
         }
+    }
+
+    IEnumerator LoadWithDelay(int sceneIndex)
+    {
+        yield return new WaitForSecondsRealtime(0.3f);
+        SceneManager.LoadScene(sceneIndex);
     }
 
     public void ShowDeathScreen()
@@ -56,16 +63,34 @@ public class GameUIManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public void OnNextLevelButton()
+    {
+        Time.timeScale = 1f;
+        int nextScene = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextScene > 5)
+            StartCoroutine(LoadWithDelay(0));
+        else
+            StartCoroutine(LoadWithDelay(nextScene));
+    }
+
+    public void OnBackButton()
+    {
+        Time.timeScale = 1f;
+        int previousScene = SceneManager.GetActiveScene().buildIndex - 1;
+        if (previousScene < 0) previousScene = 0;
+        StartCoroutine(LoadWithDelay(previousScene));
+    }
+
     public void OnRetryButton()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        StartCoroutine(LoadWithDelay(SceneManager.GetActiveScene().buildIndex));
     }
 
     public void OnMainMenuButton()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
+        StartCoroutine(LoadWithDelay(0));
     }
 
     public void OnPauseButton()

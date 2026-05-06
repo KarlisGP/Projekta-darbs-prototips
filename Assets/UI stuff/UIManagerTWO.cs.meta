@@ -1,2 +1,23 @@
 fileFormatVersion: 2
 guid: 786b5942d859f4e498c0086bf2b9281e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - startScreen: {instanceID: 0}
+  - deathScreen: {instanceID: 0}
+  - winScreen: {instanceID: 0}
+  - settingsScreen: {instanceID: 0}
+  - tutorialScreen: {instanceID: 0}
+  - tutorialImage: {instanceID: 0}
+  - menuMusic: {instanceID: 0}
+  - sfxSource: {instanceID: 0}
+  - buttonClick: {instanceID: 0}
+  - muteSprite: {fileID: 21300000, guid: 5629d93b416b0ee4984e2ad25c7d1c48, type: 3}
+  - unmuteSprite: {fileID: 21300000, guid: 4a5eb3a3559eda541afdb323ab9357e0, type: 3}
+  - muteButtonImage: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
