@@ -184,4 +184,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a68ebf1ede8c54e87db1a2a66c2502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlatformMaterial
-  jumpSound: {fileID: 8300000, guid: 6aeeac762a13e4e458f59edb89fa8b92, type: 3}
+  jumpSound: {fileID: 8300000, guid: b28ee7d6262e9f9449a8488a4855d183, type: 3}
