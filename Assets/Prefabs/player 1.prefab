@@ -219,8 +219,8 @@ MonoBehaviour:
   jumpDelay: 0
   baseExtraJumps: 0
   audioSource: {fileID: 3303228268307559738}
-  defaultJumpSound: {fileID: 8300000, guid: bc3d6875bbfa4b54c9124d39060b052e, type: 3}
-  airJumpSound: {fileID: 8300000, guid: bc3d6875bbfa4b54c9124d39060b052e, type: 3}
+  defaultJumpSound: {fileID: 8300000, guid: 1e4b845a2a59e564285b736ca163e366, type: 3}
+  airJumpSound: {fileID: 8300000, guid: 1e4b845a2a59e564285b736ca163e366, type: 3}
   speedMultiplier: 1
   groundCheck: {fileID: 3413365498991467400}
   groundDistance: 0.3

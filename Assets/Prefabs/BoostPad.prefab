@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5490896156661295241}
   - component: {fileID: 3887811520866345377}
   - component: {fileID: 5655662303895614162}
+  - component: {fileID: -8405777355990326873}
   m_Layer: 6
   m_Name: BoostPad
   m_TagString: Platform
@@ -227,3 +228,16 @@ MonoBehaviour:
   minRotationSpeed: 20
   maxRotationSpeed: 20
   randomizeStartRotation: 0
+--- !u!114 &-8405777355990326873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851576204335918983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a68ebf1ede8c54e87db1a2a66c2502, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlatformMaterial
+  jumpSound: {fileID: 8300000, guid: 9f7bbbd66bbe88547862609142727aed, type: 3}

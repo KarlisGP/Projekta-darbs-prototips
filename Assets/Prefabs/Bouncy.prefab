@@ -172,5 +172,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f6326c0d23ff44895bf61bc67ca196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JumpPad
-  launchForce: 70
-  launchSound: {fileID: 8300000, guid: 00711f1ca97d9cd4f85825e08df4d590, type: 3}
+  launchForce: 90
+  launchSound: {fileID: 8300000, guid: 497aa30480cfe494eac355a9d4a8594e, type: 3}
