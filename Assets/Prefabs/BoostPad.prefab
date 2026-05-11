@@ -79,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoostPad
   boostMultiplier: 6
   boostDuration: 4
-  pushForce: 4
+  pushForce: 0
 --- !u!212 &1408851848013295239
 SpriteRenderer:
   serializedVersion: 2
