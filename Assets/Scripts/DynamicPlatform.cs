@@ -3,96 +3,124 @@ using System.Collections;
 
 public class DynamicPlatform : MonoBehaviour
 {
+    [Header("Settings")]
     public float switchInterval = 2f;
-    public float respawnDelay = 1.5f;
-    [SerializeField] private float downwardForce = 5f; // The "kick" to prevent jumping from Red
+    [SerializeField] private float downwardForce = 12f;
+    [SerializeField] private LayerMask playerLayer; 
 
-    private bool isJumpMode = true;
+    [Header("State (Debug)")]
+    [SerializeField] private bool isJumpMode = true; 
 
-    private EdgeCollider2D col;
+    private EdgeCollider2D col; 
     private SpriteRenderer sr;
+    private Coroutine stateRoutine;
 
     void Start()
     {
         col = GetComponent<EdgeCollider2D>();
         sr = GetComponent<SpriteRenderer>();
 
-        StartCoroutine(SwitchMode());
-        UpdateVisual();
+        // Set initial state
+        if (isJumpMode)
+        {
+            sr.color = Color.green;
+            col.enabled = true;
+        }
+        else
+        {
+            sr.color = Color.red;
+            col.enabled = false;
+        }
+
+        StartCoroutine(TimerLoop());
     }
 
-    IEnumerator SwitchMode()
+    IEnumerator TimerLoop()
     {
         while (true)
         {
             yield return new WaitForSeconds(switchInterval);
             isJumpMode = !isJumpMode;
-            UpdateVisual();
+
+            if (stateRoutine != null) StopCoroutine(stateRoutine);
+            stateRoutine = StartCoroutine(HandleStateChange());
         }
     }
 
-    void UpdateVisual()
+    IEnumerator HandleStateChange()
     {
-        if (sr != null)
-            sr.color = isJumpMode ? Color.green : Color.red;
+        if (isJumpMode)
+        {
+            // --- SWITCHING TO GREEN ---
+            sr.color = Color.green;
+
+            // ANTI-STUCK SYSTEM:
+            // Instead of checking the line, we check the whole visual area of the sprite
+            bool playerInside = true;
+            while (playerInside)
+            {
+                // Get the visual size of the jelly bean
+                Bounds spriteBounds = sr.bounds;
+                
+                // We check a box the exact size of the sprite visual
+                // We add a tiny bit of "padding" (0.1f) to be safe
+                Collider2D hit = Physics2D.OverlapBox(
+                    spriteBounds.center, 
+                    spriteBounds.size + new Vector3(0.1f, 0.1f, 0), 
+                    transform.eulerAngles.z, // This handles rotated jelly beans!
+                    playerLayer
+                );
+                
+                if (hit == null)
+                {
+                    playerInside = false;
+                }
+                else
+                {
+                    // Player is somewhere inside the jelly bean's body. 
+                    // DO NOT turn on the collider yet.
+                    yield return new WaitForFixedUpdate();
+                }
+            }
+            col.enabled = true;
+        }
+        else
+        {
+            // --- SWITCHING TO RED ---
+            sr.color = Color.red;
+            
+            // Give physics a frame to apply the 'kick' force
+            yield return new WaitForFixedUpdate(); 
+            col.enabled = false; 
+        }
     }
 
-    // Handles the instant transition when first touching the platform
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
 
-        Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
-        PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-
-        if (isJumpMode)
+        if (!isJumpMode)
         {
-            if (player != null)
-            {
-                player.GiveExtraJump(1);
-            }
-        }
-        else // RED MODE
-        {
+            Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
             if (playerRb != null)
             {
-                // 1. Immediately kill any upward velocity the player has
-                playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, -1f);
-
-                // 2. Apply a downward push (using transform.up * -1 handles the rotation)
+                playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, -2f);
                 playerRb.AddForce(-transform.up * downwardForce, ForceMode2D.Impulse);
             }
-
-            // 3. Start the disappearing routine
-            StartCoroutine(DisablePlatform());
         }
-    }
-
-    // Keeps granting the jump while standing here, overriding the player's land-reset
-    void OnCollisionStay2D(Collision2D collision)
-    {
-        if (!collision.gameObject.CompareTag("Player")) return;
-
-        if (isJumpMode)
+        else
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                player.GiveExtraJump(1);
-            }
+            if (player != null) player.GiveExtraJump(1);
         }
     }
 
-    IEnumerator DisablePlatform()
+    void OnCollisionStay2D(Collision2D collision)
     {
-        // Smallest possible delay so the physics engine processes the 'push' 
-        // before the collider vanishes
-        yield return new WaitForFixedUpdate(); 
-        
-        col.enabled = false;
-
-        yield return new WaitForSeconds(respawnDelay);
-
-        col.enabled = true;
+        if (isJumpMode && collision.gameObject.CompareTag("Player"))
+        {
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            if (player != null) player.GiveExtraJump(1);
+        }
     }
 }
