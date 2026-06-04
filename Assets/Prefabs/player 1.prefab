@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e845a1164e6149c4bbc7e6904844d163, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 30
+  moveSpeed: 25
   jumpForce: 80
   jumpDelay: 0
   baseExtraJumps: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
   airJumpSound: {fileID: 8300000, guid: 1e4b845a2a59e564285b736ca163e366, type: 3}
   speedMultiplier: 1
   groundCheck: {fileID: 3413365498991467400}
-  groundDistance: 0.3
+  groundDistance: 0.4
   groundMask:
     serializedVersion: 2
     m_Bits: 64
