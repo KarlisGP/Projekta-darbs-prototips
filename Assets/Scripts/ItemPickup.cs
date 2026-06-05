@@ -3,6 +3,9 @@ using System.Collections;
 
 public class ItemPickup : MonoBehaviour
 {
+    [Header("Target")]
+    public HandHealth targetHand;
+
     [Header("Damage")]
     public float damageAmount = 10f;
 
@@ -23,7 +26,6 @@ public class ItemPickup : MonoBehaviour
 
     private void Update()
     {
-        // Spin only after pickup
         if (hasBeenCollected)
         {
             transform.Rotate(0f, 0f, spinSpeed * Time.deltaTime);
@@ -32,7 +34,8 @@ public class ItemPickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (hasBeenCollected) return;
+        if (hasBeenCollected)
+            return;
 
         if (other.CompareTag("Player"))
         {
@@ -49,21 +52,23 @@ public class ItemPickup : MonoBehaviour
     {
         hasBeenCollected = true;
 
-        // Damage the hand once
-        HandHealth hand = FindObjectOfType<HandHealth>();
-
-        if (hand != null)
+        if (targetHand != null)
         {
-            hand.TakeDamage(damageAmount);
+            targetHand.TakeDamage(damageAmount);
+
+            Debug.Log(
+                $"Pickup dealt {damageAmount} damage. Hand HP now: {targetHand.currentHealth}"
+            );
         }
 
-        // Stop physics motion
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null)
+            col.enabled = false;
+
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
             rb.gravityScale = 0f;
-
-            // Fly upward
             rb.AddForce(Vector2.up * flyUpForce, ForceMode2D.Impulse);
         }
 
@@ -72,7 +77,7 @@ public class ItemPickup : MonoBehaviour
 
     private IEnumerator DestroyAfterDelay()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.4f);
 
         if (spawner != null)
         {

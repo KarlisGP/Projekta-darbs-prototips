@@ -4,7 +4,7 @@ using System.Collections;
 public class HandDamageTrigger : MonoBehaviour
 {
     [Header("Target")]
-    public HandHealth hand;
+    public HandHealth targetHand;
 
     [Header("Damage")]
     public float damageAmount = 25f;
@@ -16,28 +16,16 @@ public class HandDamageTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag("Player"))
+            return;
 
-        TryDamageHand();
-    }
+        if (!canHit)
+            return;
 
-    private void TryDamageHand()
-    {
-        if (!canHit) return;
-
-        if (hand == null)
+        if (targetHand != null)
         {
-            hand = FindObjectOfType<HandHealth>();
-        }
-
-        if (hand != null)
-        {
-            hand.TakeDamage(damageAmount);
-            Debug.Log($"Trigger hit → Hand takes {damageAmount} damage");
-        }
-        else
-        {
-            Debug.LogWarning("No HandHealth found in scene!");
+            targetHand.TakeDamage(damageAmount);
+            Debug.Log($"Hand damaged for {damageAmount}");
         }
 
         StartCoroutine(Cooldown());
@@ -46,9 +34,9 @@ public class HandDamageTrigger : MonoBehaviour
     private IEnumerator Cooldown()
     {
         canHit = false;
-        yield return new WaitForSeconds(hitCooldown);
-        canHit = true;
 
-        Debug.Log("Hand trigger cooldown ready");
+        yield return new WaitForSeconds(hitCooldown);
+
+        canHit = true;
     }
 }
