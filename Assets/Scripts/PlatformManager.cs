@@ -48,7 +48,7 @@ public class PlatformManager : MonoBehaviour
         int randomIndex = Random.Range(0, patternPrefabs.Length);
         
         float randomX = spawnPoint.position.x + Random.Range(-horizontalRange, horizontalRange);
-        Vector3 spawnPos = new Vector3(randomX, spawnPoint.position.y, 0f);
+        Vector3 spawnPos = new Vector3(randomX, spawnPoint.position.y, -1f);
 
         GameObject newPattern = Instantiate(patternPrefabs[randomIndex], spawnPos, Quaternion.identity, null);
 
