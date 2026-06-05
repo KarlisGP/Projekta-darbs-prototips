@@ -1671,6 +1671,7 @@ GameObject:
   - component: {fileID: 799961448}
   - component: {fileID: 799961447}
   - component: {fileID: 799961449}
+  - component: {fileID: 799961450}
   m_Layer: 0
   m_Name: Arm
   m_TagString: Untagged
@@ -1744,8 +1745,8 @@ Transform:
   m_GameObject: {fileID: 799961441}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -71.1551, y: 50.2971, z: 0}
-  m_LocalScale: {x: 2.8058, y: 4.476223, z: 1}
+  m_LocalPosition: {x: -73.7846, y: 52.1639, z: 0}
+  m_LocalScale: {x: 6.539264, y: 9.734938, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1847,6 +1848,33 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   destroyOnDeath: 1
+--- !u!50 &799961450
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799961441}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &840730377
 GameObject:
   m_ObjectHideFlags: 0
