@@ -2,34 +2,43 @@ using UnityEngine;
 
 public class HandHealth : MonoBehaviour
 {
-    public int maxHealth = 100;
-    private int currentHealth;
+    [Header("Health")]
+    public float maxHealth = 100f;
+    public float currentHealth;
+
+    [Header("Effects")]
+    public bool destroyOnDeath = true;
+
+    private bool isDead = false;
 
     private void Start()
     {
         currentHealth = maxHealth;
+        Debug.Log($"Hand spawned with {currentHealth} HP");
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
+        if (isDead) return;
+
         currentHealth -= damage;
 
-        Debug.Log("Hand Health: " + currentHealth);
+        Debug.Log($"Hand took {damage} damage. Current HP: {currentHealth}");
 
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
             Die();
         }
     }
 
     private void Die()
     {
-        Debug.Log("Hand Destroyed!");
+        isDead = true;
 
-        // Add your game over logic here
-        // Example:
-        // FindObjectOfType<GameUIManager>().ShowDeathScreen();
+        Debug.Log("HAND DESTROYED!");
 
-        Destroy(gameObject);
+        if (destroyOnDeath)
+            Destroy(gameObject);
     }
 }
