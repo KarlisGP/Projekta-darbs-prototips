@@ -3,53 +3,40 @@ using UnityEngine.SceneManagement;
 
 public class DestructiveCube : MonoBehaviour
 {
-    private static bool gameIsOver = false;
+    public int damageToHand = 20;
+    private HandHealth myHealth;
     private GameUIManager uiManager;
 
     void Start()
     {
-        gameIsOver = false;
+        myHealth = GetComponent<HandHealth>();
         uiManager = FindObjectOfType<GameUIManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        HandleContact(other.gameObject);
-    }
-
-    private void HandleContact(GameObject other)
-    {
-        if (other.CompareTag("Player") && !gameIsOver)
+        // 1. Kill Player
+        if (other.CompareTag("Player"))
         {
-            gameIsOver = true;
-            GameOver(other.gameObject);
+            if (uiManager != null) uiManager.ShowDeathScreen();
+            else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+        // 2. Handle Platforms
         if (other.CompareTag("Platform"))
         {
+            // If the platform is an Ice cube, damage the hand
+            // We check the name for "Ice" (Case sensitive: "Ice")
+            if (other.gameObject.name.Contains("Ice"))
+            {
+                if (myHealth != null)
+                {
+                    myHealth.TakeDamage(damageToHand);
+                }
+            }
+
+            // Destroy the platform regardless of what it is
             Destroy(other.gameObject);
         }
-    }
-
-    private void GameOver(GameObject player)
-    {
-        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.linearVelocity = Vector2.zero;
-
-        if (uiManager != null)
-            uiManager.ShowDeathScreen();
-        else
-            Invoke("ReloadScene", 1f);
-    }
-
-    public void Retry()
-    {
-        gameIsOver = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    private void ReloadScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

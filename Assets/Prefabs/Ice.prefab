@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8540944920209818050}
   - component: {fileID: 4613408099881174634}
   m_Layer: 6
-  m_Name: Sliperry
+  m_Name: Ice
   m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
