@@ -6,51 +6,65 @@ public class BossArmAI : MonoBehaviour
     public enum State { Patrol, Windup, Slam, Retract }
     public State currentState = State.Patrol;
 
-    [Header("Detection")]
+    [Header("Anchors (Markers)")]
+    public Transform armHome;    // Marker at top of blender
+    public Transform armTarget;  // Marker at blades
     public Transform player;
-    public float detectRange = 25f;
-    public float detectionTimeNeeded = 3f;
-    public float windupTime = 1f;
-    
-    [Header("Movement (Local)")]
-    public float patrolSpeed = 2f;
+
+    [Header("Detection Settings")]
+    public float detectionWidth = 2.0f; 
+    public float detectionHeight = 40.0f; // INCREASED: How far down the box goes
+    public float detectionTime = 3f;
+
+    [Header("Movement Settings")]
+    public float patrolSpeed = 3f;
     public float patrolWidth = 4f;
-    public float slamSpeed = 30f;
+    public float slamSpeed = 50f;
     public float retractSpeed = 10f;
-    public float slamLocalY = -15f; // How far DOWN from start point to hit blades
 
     private float detectionTimer;
-    private Vector3 startLocalPos;
+    private float currentXOffset;
 
     void Start()
     {
-        // Store the position relative to the blender
-        startLocalPos = transform.localPosition;
         if (player == null) player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void Update()
     {
+        if (armHome == null) return;
+
         if (currentState == State.Patrol)
         {
-            // 1. Patrol Left/Right
-            float x = Mathf.PingPong(Time.time * patrolSpeed, patrolWidth * 2) - patrolWidth;
-            transform.localPosition = new Vector3(x, startLocalPos.y, 0);
+            PatrolLogic();
+        }
+    }
 
-            // 2. Detection Logic
-            // We shoot a raycast down to find the player
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, detectRange);
-            
-            // DRAW THE RAY so you can see it in Scene View!
-            Debug.DrawRay(transform.position, Vector2.down * detectRange, Color.red);
+    void PatrolLogic()
+    {
+        // 1. SYNC UPWARD MOVEMENT: 
+        // The arm matches the Home Marker's Y exactly. No more drifting!
+        float targetY = armHome.position.y;
 
-            if (hit.collider != null && hit.collider.CompareTag("Player"))
+        // 2. PATROL LEFT/RIGHT
+        currentXOffset = Mathf.PingPong(Time.time * patrolSpeed, patrolWidth * 2) - patrolWidth;
+        float targetX = armHome.position.x + currentXOffset;
+
+        // Apply position
+        transform.position = new Vector3(targetX, targetY, transform.position.z);
+
+        // 3. DETECTION: Checks if player is in the "Cyan Zone"
+        if (player != null)
+        {
+            // Check horizontal distance
+            float xDiff = Mathf.Abs(transform.position.x - player.position.x);
+            // Check vertical distance (is player below the arm?)
+            float yDiff = transform.position.y - player.position.y;
+
+            if (xDiff < detectionWidth && yDiff > 0 && yDiff < detectionHeight)
             {
                 detectionTimer += Time.deltaTime;
-                if (detectionTimer >= detectionTimeNeeded) 
-                {
-                    StartCoroutine(SlamSequence());
-                }
+                if (detectionTimer >= detectionTime) StartCoroutine(SlamSequence());
             }
             else
             {
@@ -62,38 +76,45 @@ public class BossArmAI : MonoBehaviour
     IEnumerator SlamSequence()
     {
         currentState = State.Windup;
-        Vector3 lockLocalPos = transform.localPosition;
+        detectionTimer = 0;
 
-        // Shake for windup
+        // Shake
         float elapsed = 0;
-        while (elapsed < windupTime)
+        while (elapsed < 1f) 
         {
-            transform.localPosition = lockLocalPos + (Vector3)Random.insideUnitCircle * 0.1f;
+            // Stay at the Home Marker height while shaking
+            transform.position = new Vector3(armHome.position.x + currentXOffset, armHome.position.y, transform.position.z) + (Vector3)Random.insideUnitCircle * 0.2f;
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         currentState = State.Slam;
-        // Slam to the local Y target (the blades)
-        Vector3 targetLocalPos = new Vector3(lockLocalPos.x, slamLocalY, 0);
-
-        while (Vector3.Distance(transform.localPosition, targetLocalPos) > 0.1f)
+        // Slam down until we reach the Y of the armTarget marker
+        while (transform.position.y > armTarget.position.y + 0.2f)
         {
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetLocalPos, slamSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, armTarget.position.y, transform.position.z), slamSpeed * Time.deltaTime);
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.3f); // Pause at bottom
+        yield return new WaitForSeconds(0.5f); // Stay at bottom
 
         currentState = State.Retract;
-        Vector3 homeLocalPos = new Vector3(transform.localPosition.x, startLocalPos.y, 0);
-        while (Vector3.Distance(transform.localPosition, homeLocalPos) > 0.1f)
+        // Back to Home Marker
+        while (Vector3.Distance(transform.position, new Vector3(transform.position.x, armHome.position.y, transform.position.z)) > 0.1f)
         {
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, homeLocalPos, retractSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, armHome.position.y, transform.position.z), retractSpeed * Time.deltaTime);
             yield return null;
         }
 
-        detectionTimer = 0;
         currentState = State.Patrol;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        // Draws the detection box from the arm down to the detectionHeight
+        Vector3 boxCenter = transform.position + Vector3.down * (detectionHeight / 2);
+        Vector3 boxSize = new Vector3(detectionWidth * 2, detectionHeight, 1);
+        Gizmos.DrawWireCube(boxCenter, boxSize);
     }
 }
