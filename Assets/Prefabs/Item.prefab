@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8522888948242577079}
   m_Layer: 0
   m_Name: Item
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1376afdb1edb4dc49acc3b9f45e2e4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
+  targetHand: {fileID: 0}
   damageAmount: 5
   flyUpForce: 40
   spinSpeed: 400
