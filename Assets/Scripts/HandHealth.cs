@@ -6,39 +6,79 @@ public class HandHealth : MonoBehaviour
     public float maxHealth = 100f;
     public float currentHealth;
 
-    [Header("Effects")]
-    public bool destroyOnDeath = true;
+    [Header("Sprites")]
+    public Sprite downSprite1;
+    public Sprite downSprite2;
+    public Sprite downSprite3;
 
-    private bool isDead = false;
+    public Sprite upSprite1;
+    public Sprite upSprite2;
+    public Sprite upSprite3;
+
+    [Header("Movement")]
+    public bool movingUp;
+
+    private SpriteRenderer spriteRenderer;
+    private float previousY;
 
     private void Start()
     {
         currentHealth = maxHealth;
-        Debug.Log($"Hand spawned with {currentHealth} HP");
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        previousY = transform.position.y;
+
+        UpdateSprite();
+    }
+
+    private void Update()
+    {
+        movingUp = transform.position.y > previousY;
+        previousY = transform.position.y;
+
+        UpdateSprite();
     }
 
     public void TakeDamage(float damage)
     {
-        if (isDead) return;
-
         currentHealth -= damage;
+        currentHealth = Mathf.Max(0, currentHealth);
 
-        Debug.Log($"Hand took {damage} damage. Current HP: {currentHealth}");
+        Debug.Log($"Hand HP: {currentHealth}");
 
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-            Die();
-        }
+        UpdateSprite();
     }
 
-    private void Die()
+    private void UpdateSprite()
     {
-        isDead = true;
+        float healthPercent = currentHealth / maxHealth;
 
-        Debug.Log("HAND DESTROYED!");
+        int stage;
 
-        if (destroyOnDeath)
-            Destroy(gameObject);
+        if (healthPercent > 0.66f)
+            stage = 0;
+        else if (healthPercent > 0.33f)
+            stage = 1;
+        else
+            stage = 2;
+
+        if (!movingUp)
+        {
+            switch (stage)
+            {
+                case 0: spriteRenderer.sprite = downSprite1; break;
+                case 1: spriteRenderer.sprite = downSprite2; break;
+                case 2: spriteRenderer.sprite = downSprite3; break;
+            }
+        }
+        else
+        {
+            switch (stage)
+            {
+                case 0: spriteRenderer.sprite = upSprite1; break;
+                case 1: spriteRenderer.sprite = upSprite2; break;
+                case 2: spriteRenderer.sprite = upSprite3; break;
+            }
+        }
     }
 }
