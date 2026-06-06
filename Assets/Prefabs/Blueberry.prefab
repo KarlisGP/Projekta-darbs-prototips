@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6871721958680226660}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.727, y: 53.79, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -129,8 +129,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.07581493, y: -0.33777976}
-  m_Radius: 0.4256931
+  m_Offset: {x: 0.078367054, y: -0.33589697}
+  m_Radius: 0.4274376
 --- !u!114 &1373221914555473223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +167,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 0.94408655
+  MinDistance: 0.5243443
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0

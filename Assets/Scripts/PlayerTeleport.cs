@@ -1,25 +1,53 @@
 using UnityEngine;
 
-public class PlayerTeleport : MonoBehaviour
+public class BouncyTeleporter : MonoBehaviour
 {
-    [Header("Destination")]
-    public Transform teleportExit; // Drag the 'ExitPoint' object here
+    [Header("Teleport Settings")]
+    public Transform teleportExit;
+    public float clearRadius = 3f;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    [Header("Bounce Settings (Optional)")]
+    public bool giveJumpBoost = true;
+    public float bounceForce = 20f;
+
+    // Use Collision instead of Trigger so it works on solid platforms
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            // 1. Move the player to the exit point
-            other.transform.position = teleportExit.position;
+            Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
 
-            // 2. Reset player velocity so they don't 'fly' after teleporting
-            Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            // 1. Apply Jump Boost first (if enabled)
+            if (giveJumpBoost && rb != null)
             {
-                rb.linearVelocity = Vector2.zero;
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+                rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
+                Debug.Log("Boost Applied!");
             }
 
-            Debug.Log("Player Teleported to the Boss Platform!");
+            // 2. Perform Teleport
+            if (teleportExit != null)
+            {
+                ClearExitArea();
+                collision.transform.position = teleportExit.position;
+                
+                // Optional: stop velocity after teleport so they don't go flying
+                // rb.linearVelocity = Vector2.zero; 
+                
+                Debug.Log("Teleported!");
+            }
+        }
+    }
+
+    void ClearExitArea()
+    {
+        Collider2D[] collidersAtExit = Physics2D.OverlapCircleAll(teleportExit.position, clearRadius);
+        foreach (Collider2D col in collidersAtExit)
+        {
+            if (col.CompareTag("Platform"))
+            {
+                Destroy(col.gameObject);
+            }
         }
     }
 }

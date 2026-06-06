@@ -54,6 +54,7 @@ public class PlatformManager : MonoBehaviour
 
         // Fixed Scale - No Randomizing
         newPattern.transform.localScale = new Vector3(baseScale, baseScale, 1f);
+        Debug.Log("SPAWNER: Just set " + newPattern.name + " scale to: " + baseScale);
 
         Debug.Log("Spawned " + newPattern.name + " with fixed scale " + baseScale);
     }
