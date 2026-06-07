@@ -6,41 +6,35 @@ public class BouncyTeleporter : MonoBehaviour
     public Transform teleportExit;
     public float clearRadius = 3f;
 
-    [Header("Bounce Settings (Optional)")]
-    public bool giveJumpBoost = true;
-    public float bounceForce = 20f;
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
+            Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
 
-            // 1. Perform Teleport
             if (teleportExit != null)
             {
+                // 1. Clear the area at the exit so they don't get stuck in a wall
                 ClearExitArea();
                 
-                // Move the player to the exit
-                collision.transform.position = teleportExit.position;
+                // 2. Teleport the player
+                other.transform.position = teleportExit.position;
 
-                // 2. STOP MOMENTUM
+                // 3. HARD PHYSICS RESET
                 if (rb != null)
                 {
-                    // This sets their movement speed to 0 in all directions
-                    rb.linearVelocity = Vector2.zero; 
-                    // This stops them from spinning if they were rotating
-                    rb.angularVelocity = 0f; 
-                }
+                    // Stop all movement
+                    rb.linearVelocity = Vector2.zero;
+                    
+                    // Stop all rotation/spinning
+                    rb.angularVelocity = 0f;
 
-                Debug.Log("Teleported and Momentum Reset!");
+                    // This "Sleeps" the physics engine for this object.
+                    // It clears any pending forces (like jumps or explosions) 
+                    // that were about to happen.
+                    rb.Sleep(); 
 
-                // 3. Apply Jump Boost (Optional - only if you want them to hop UP at the destination)
-                // If you want them to stand perfectly still, move this block BEFORE the Teleport block.
-                if (giveJumpBoost && rb != null)
-                {
-                    rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
-                    Debug.Log("Post-Teleport Boost Applied!");
+                    Debug.Log("Player Teleported: All forces and momentum killed.");
                 }
             }
         }
@@ -53,7 +47,6 @@ public class BouncyTeleporter : MonoBehaviour
         Collider2D[] collidersAtExit = Physics2D.OverlapCircleAll(teleportExit.position, clearRadius);
         foreach (Collider2D col in collidersAtExit)
         {
-            // Only destroy platforms, don't destroy the player!
             if (col.CompareTag("Platform"))
             {
                 Destroy(col.gameObject);
