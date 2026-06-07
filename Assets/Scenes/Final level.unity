@@ -502,7 +502,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 6b2dd9ce7aef399429ebed8776ebd4be, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.6}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -520,7 +520,7 @@ Transform:
   m_GameObject: {fileID: 210828259}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.7668915, y: -4.3234863, z: -6}
+  m_LocalPosition: {x: 5.7668915, y: -4.3234863, z: -2}
   m_LocalScale: {x: 2.3081, y: 2.3081, z: 2.3081}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3107,7 +3107,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 80b8524386c210b4d89d710488142ffc, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.69803923}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3125,7 +3125,7 @@ Transform:
   m_GameObject: {fileID: 1057744338}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.1958923, y: -0.5151367, z: -7}
+  m_LocalPosition: {x: -1.1958923, y: -0.5151367, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4719,6 +4719,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: player 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: maxHealth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 53fd203bcb7a2a342b8a50d69756015c, type: 3}
+    - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
+      propertyPath: bossMusicSource
+      value: 
+      objectReference: {fileID: 744397244}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5442,7 +5454,7 @@ MonoBehaviour:
   cameraTarget: {fileID: 448822319}
   bossHealth: {fileID: 1752532407}
   fillTransform: {fileID: 1057744340}
-  offset: {x: 0, y: 2, z: 5}
+  offset: {x: -4, y: 17, z: 25}
   fullWidthScale: 1
   emptyWidthScale: 0
 --- !u!4 &1964873732
@@ -5455,7 +5467,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -115.46689, y: 101.02348, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.83651954, y: 0.66318166, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 210828261}
