@@ -11,20 +11,10 @@ public class HandHealth : MonoBehaviour
     public float currentHealth;
     private bool isDead = false;
 
-    [Header("Hand Sprites (6 total)")]
+    [Header("Hand Sprites (Combined Hand/Elbow)")]
     public SpriteRenderer handRenderer;
-    public Sprite upSprite1;
-    public Sprite upSprite2;
-    public Sprite upSprite3;
-    public Sprite downSprite1;
-    public Sprite downSprite2;
-    public Sprite downSprite3;
-
-    [Header("Elbow Sprites (3 total)")]
-    public SpriteRenderer elbowRenderer;
-    public Sprite elbow1;
-    public Sprite elbow2;
-    public Sprite elbow3;
+    public Sprite upSprite1, upSprite2, upSprite3;
+    public Sprite downSprite1, downSprite2, downSprite3;
 
     [Header("Health Meter Sprite")]
     public Transform healthSprite;
@@ -34,147 +24,85 @@ public class HandHealth : MonoBehaviour
     [Header("Effects")]
     public AudioClip damageSound;
     public AudioClip deathSound;
-
     private AudioSource audioSource;
     private EyeTracker eyeTracker;
 
     private void Start()
     {
         currentHealth = maxHealth;
-
-        if (handRenderer == null)
-            handRenderer = GetComponent<SpriteRenderer>();
-
-        if (armAI == null)
-            armAI = GetComponentInParent<BossArmAI>();
-
-        if (uiManager == null)
-            uiManager = FindObjectOfType<GameUIManager>();
-
+        if (handRenderer == null) handRenderer = GetComponent<SpriteRenderer>();
+        if (armAI == null) armAI = GetComponentInParent<BossArmAI>();
+        if (uiManager == null) uiManager = FindObjectOfType<GameUIManager>();
+        
         eyeTracker = FindObjectOfType<EyeTracker>();
-
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
 
         UpdateVisuals();
         UpdateHealthSprite();
+    }
+
+    // THIS IS THE MISSING PIECE: It checks for "Up/Down" state every frame
+    private void Update()
+    {
+        if (!isDead)
+        {
+            UpdateVisuals();
+        }
     }
 
     public void TakeDamage(float damage)
     {
-        if (isDead)
-            return;
+        if (isDead) return;
 
         currentHealth = Mathf.Max(0f, currentHealth - damage);
-
-        Debug.Log($"Boss HP: {currentHealth}/{maxHealth}");
-
-        if (damageSound != null)
-            audioSource.PlayOneShot(damageSound);
-
-        if (eyeTracker != null)
-            eyeTracker.TriggerJitter();
+        
+        if (damageSound != null) audioSource.PlayOneShot(damageSound);
+        if (eyeTracker != null) eyeTracker.TriggerJitter();
 
         UpdateVisuals();
         UpdateHealthSprite();
 
-        if (currentHealth <= 0f)
-        {
-            Die();
-        }
+        if (currentHealth <= 0f) Die();
     }
 
     private void UpdateVisuals()
     {
-        if (armAI == null)
-            return;
+        if (armAI == null || handRenderer == null) return;
 
         float healthPercent = currentHealth / maxHealth;
 
-        int stage;
+        // Logic for 10 HP stages
+        int stage = (healthPercent > 0.66f) ? 1 : (healthPercent > 0.33f) ? 2 : 3;
 
-        if (healthPercent > 0.66f)
-            stage = 1;
-        else if (healthPercent > 0.33f)
-            stage = 2;
-        else
-            stage = 3;
-
+        // Check if the AI is currently in the Slam state
         bool isSlamming = armAI.currentState == BossArmAI.State.Slam;
 
-        // Hand sprites
-        if (handRenderer != null)
+        if (isSlamming)
         {
-            if (isSlamming)
-            {
-                handRenderer.sprite =
-                    stage == 1 ? downSprite1 :
-                    stage == 2 ? downSprite2 :
-                    downSprite3;
-            }
-            else
-            {
-                handRenderer.sprite =
-                    stage == 1 ? upSprite1 :
-                    stage == 2 ? upSprite2 :
-                    upSprite3;
-            }
+            handRenderer.sprite = (stage == 1) ? downSprite1 : (stage == 2) ? downSprite2 : downSprite3;
         }
-
-        // Elbow sprites
-        if (elbowRenderer != null)
+        else
         {
-            elbowRenderer.sprite =
-                stage == 1 ? elbow1 :
-                stage == 2 ? elbow2 :
-                elbow3;
+            handRenderer.sprite = (stage == 1) ? upSprite1 : (stage == 2) ? upSprite2 : upSprite3;
         }
     }
 
     private void UpdateHealthSprite()
     {
-        if (healthSprite == null)
-            return;
-
+        if (healthSprite == null) return;
         float healthPercent = currentHealth / maxHealth;
-
         float scale = Mathf.Lerp(minimumSize, fullSize, healthPercent);
-
-        healthSprite.localScale = new Vector3(
-            scale,
-            scale,
-            healthSprite.localScale.z
-        );
+        healthSprite.localScale = new Vector3(scale, scale, healthSprite.localScale.z);
     }
 
     private void Die()
     {
-        if (isDead)
-            return;
-
+        if (isDead) return;
         isDead = true;
 
-        // Stop all currently playing audio
-        foreach (AudioSource source in FindObjectsOfType<AudioSource>())
-        {
-            source.Stop();
-        }
+        foreach (AudioSource source in FindObjectsOfType<AudioSource>()) source.Stop();
+        if (deathSound != null) AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position);
 
-        // Play death sound
-        if (deathSound != null)
-        {
-            AudioSource.PlayClipAtPoint(
-                deathSound,
-                Camera.main != null ? Camera.main.transform.position : transform.position
-            );
-        }
-
-        Debug.Log("Boss Defeated!");
-
-        if (uiManager != null)
-        {
-            uiManager.ShowWinScreen();
-        }
+        if (uiManager != null) uiManager.ShowWinScreen();
     }
 }
