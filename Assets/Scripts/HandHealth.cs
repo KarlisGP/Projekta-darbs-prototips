@@ -64,12 +64,19 @@ public class HandHealth : MonoBehaviour
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
 
-        // Damage sound
+        // 🔊 Damage sound
         if (damageSound != null)
+        {
             audioSource.PlayOneShot(damageSound);
+        }
 
+        // 👁 Eye reaction
         if (eyeTracker != null)
+        {
             eyeTracker.TriggerJitter();
+        }
+
+        Debug.Log($"Hand HP: {currentHealth}");
 
         UpdateSprite();
 
@@ -85,7 +92,14 @@ public class HandHealth : MonoBehaviour
 
         isDead = true;
 
-        // 🔥 Play death sound (important part)
+        // 🛑 STOP ALL AUDIO IN SCENE
+        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
+        foreach (AudioSource a in allAudio)
+        {
+            a.Stop();
+        }
+
+        // 💀 Play death sound AFTER stopping everything
         if (deathSound != null)
         {
             audioSource.PlayOneShot(deathSound);
@@ -132,6 +146,8 @@ public class HandHealth : MonoBehaviour
         }
 
         if (targetSprite != null && spriteRenderer.sprite != targetSprite)
+        {
             spriteRenderer.sprite = targetSprite;
+        }
     }
 }
