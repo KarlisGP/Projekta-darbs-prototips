@@ -14,14 +14,24 @@ public class PlayerController : MonoBehaviour
     private bool isJumpStarting = false;
 
     [Header("Extra Jump")]
-    public int baseExtraJumps = 0; 
-    private int extraJumpsAllowed; 
+    public int baseExtraJumps = 0;
+    private int extraJumpsAllowed;
     private int extraJumpsRemaining;
 
     [Header("Audio")]
     public AudioSource audioSource;
-    public AudioClip defaultJumpSound; 
+    public AudioClip defaultJumpSound;
     public AudioClip airJumpSound;
+
+    [Header("Death")]
+    public float maxHealth = 100f;
+    public float currentHealth;
+    private bool isDead = false;
+
+    public AudioClip deathSound;
+
+    // 🎵 IMPORTANT: assign the AudioSource that plays boss music here
+    public AudioSource bossMusicSource;
 
     [Header("Speed Boost")]
     public float speedMultiplier = 1f;
@@ -54,14 +64,22 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        extraJumpsAllowed = baseExtraJumps; 
+        extraJumpsAllowed = baseExtraJumps;
         extraJumpsRemaining = extraJumpsAllowed;
 
-        if (OnLandEvent == null) OnLandEvent = new UnityEvent();
+        currentHealth = maxHealth;
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        if (OnLandEvent == null)
+            OnLandEvent = new UnityEvent();
     }
 
     void Update()
     {
+        if (isDead) return;
+
         moveX = Input.GetAxis("Horizontal");
 
         if (groundCheck == null) return;
@@ -71,20 +89,19 @@ public class PlayerController : MonoBehaviour
             groundDistance,
             groundMask
         );
-        
+
         isGrounded = groundCollider != null;
         isOnNoJumpSurface = groundCollider != null && groundCollider.CompareTag(noJumpTag);
 
-        if (isGrounded && !wasGrounded) OnLanding();
+        if (isGrounded && !wasGrounded)
+            OnLanding();
+
         wasGrounded = isGrounded;
 
-        // JUMP LOGIC
         if (Input.GetButtonDown("Jump") && !isJumpStarting && !isOnNoJumpSurface)
         {
             if (isGrounded)
-            {
                 StartCoroutine(JumpRoutine(true, groundCollider));
-            }
             else if (extraJumpsRemaining > 0)
             {
                 extraJumpsRemaining--;
@@ -109,25 +126,28 @@ public class PlayerController : MonoBehaviour
     IEnumerator JumpRoutine(bool isGroundJump, Collider2D platformCollider)
     {
         isJumpStarting = true;
-        if (anim != null) anim.SetTrigger("JumpStart");
 
-        // 🔊 DYNAMIC SOUND LOGIC
+        if (anim != null)
+            anim.SetTrigger("JumpStart");
+
         if (audioSource != null)
         {
             AudioClip clipToPlay = null;
 
             if (isGroundJump && platformCollider != null)
             {
-                // Check if platform has a specific sound
                 PlatformMaterial platMat = platformCollider.GetComponent<PlatformMaterial>();
-                clipToPlay = (platMat != null && platMat.jumpSound != null) ? platMat.jumpSound : defaultJumpSound;
+                clipToPlay = (platMat != null && platMat.jumpSound != null)
+                    ? platMat.jumpSound
+                    : defaultJumpSound;
             }
             else if (!isGroundJump)
             {
                 clipToPlay = airJumpSound;
             }
 
-            if (clipToPlay != null) audioSource.PlayOneShot(clipToPlay);
+            if (clipToPlay != null)
+                audioSource.PlayOneShot(clipToPlay);
         }
 
         yield return new WaitForSeconds(jumpDelay);
@@ -141,12 +161,16 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(moveX) < 0.01f && isGrounded && !isJumpStarting)
         {
             idleTimer += Time.deltaTime;
-            if (idleTimer >= timeToWait && anim != null) anim.SetBool("isBored", true);
+
+            if (idleTimer >= timeToWait && anim != null)
+                anim.SetBool("isBored", true);
         }
         else
         {
             idleTimer = 0f;
-            if (anim != null) anim.SetBool("isBored", false);
+
+            if (anim != null)
+                anim.SetBool("isBored", false);
         }
     }
 
@@ -154,25 +178,94 @@ public class PlayerController : MonoBehaviour
     {
         OnLandEvent.Invoke();
         idleTimer = 0f;
+
         extraJumpsAllowed = baseExtraJumps;
         extraJumpsRemaining = extraJumpsAllowed;
     }
 
     void FixedUpdate()
     {
+        if (isDead) return;
+
         if (Mathf.Abs(moveX) > 0.01f)
         {
-            rb.linearVelocity = new Vector2(moveX * moveSpeed * speedMultiplier, rb.linearVelocity.y);
+            rb.linearVelocity = new Vector2(
+                moveX * moveSpeed * speedMultiplier,
+                rb.linearVelocity.y
+            );
         }
     }
 
     void Flip()
     {
         facingRight = !facingRight;
+
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
     }
+
+    // =========================
+    // 💀 DAMAGE + DEATH SYSTEM
+    // =========================
+
+    public void TakeDamage(float damage)
+    {
+        if (isDead) return;
+
+        currentHealth -= damage;
+        currentHealth = Mathf.Max(0f, currentHealth);
+
+        Debug.Log($"Player HP: {currentHealth}");
+
+        if (currentHealth <= 0f)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        if (isDead) return;
+
+        isDead = true;
+
+        Debug.Log("Player died!");
+
+        // 🛑 STOP BOSS MUSIC (SAFE CHECK)
+        if (bossMusicSource != null)
+        {
+            bossMusicSource.Stop();
+        }
+        else
+        {
+            Debug.LogWarning("Boss music source NOT assigned!");
+        }
+
+        // 🔊 PLAY DEATH SOUND (WILL NOT GET CUT OFF)
+        if (deathSound != null)
+        {
+            AudioSource.PlayClipAtPoint(deathSound, transform.position);
+        }
+        else
+        {
+            Debug.LogWarning("Death sound not assigned!");
+        }
+
+        rb.linearVelocity = Vector2.zero;
+
+        StartCoroutine(DisablePlayer());
+    }
+
+    private IEnumerator DisablePlayer()
+    {
+        yield return new WaitForSeconds(0.05f);
+        this.enabled = false;
+    }
+
+    // =========================
+    // BOOST SYSTEM (UNCHANGED)
+    // =========================
 
     public void GiveExtraJump(int amount)
     {
@@ -182,7 +275,9 @@ public class PlayerController : MonoBehaviour
 
     public void ApplySpeedBoost(float multiplier, float duration)
     {
-        if (boostRoutine != null) StopCoroutine(boostRoutine);
+        if (boostRoutine != null)
+            StopCoroutine(boostRoutine);
+
         boostRoutine = StartCoroutine(SpeedBoostRoutine(multiplier, duration));
     }
 
@@ -193,22 +288,25 @@ public class PlayerController : MonoBehaviour
         speedMultiplier = 1f;
     }
 
-    // ✅ TRIGGER BOOST PADS
-    private void OnTriggerEnter2D(Collider2D collision) => TryApplyBoost(collision.gameObject);
-    private void OnCollisionEnter2D(Collision2D collision) => TryApplyBoost(collision.gameObject);
+    private void OnTriggerEnter2D(Collider2D collision)
+        => TryApplyBoost(collision.gameObject);
+
+    private void OnCollisionEnter2D(Collision2D collision)
+        => TryApplyBoost(collision.gameObject);
 
     void TryApplyBoost(GameObject obj)
     {
-        // 1. Existing Force/Speed logic (from your BoostPad script)
         BoostPad pad = obj.GetComponent<BoostPad>();
+
         if (pad != null)
         {
             ApplySpeedBoost(pad.boostMultiplier, pad.boostDuration);
+
             Vector2 direction = obj.transform.right.normalized;
             rb.AddForce(direction * pad.pushForce, ForceMode2D.Impulse);
 
-            // 🔊 2. Play unique sound for this pad
             JumpPadSound padSound = obj.GetComponent<JumpPadSound>();
+
             if (padSound != null && audioSource != null && padSound.launchSound != null)
             {
                 audioSource.PlayOneShot(padSound.launchSound);
