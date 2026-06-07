@@ -446,7 +446,7 @@ GameObject:
   - component: {fileID: 210828261}
   - component: {fileID: 210828260}
   m_Layer: 0
-  m_Name: Healthbar
+  m_Name: FrameSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,12 +519,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 210828259}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -148.13411, y: 142.04514, z: -3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5.7668915, y: -4.3234863, z: -6}
+  m_LocalScale: {x: 2.3081, y: 2.3081, z: 2.3081}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
+  m_Children:
+  - {fileID: 1057744340}
+  m_Father: {fileID: 1964873732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &290588337
 GameObject:
@@ -1021,6 +1022,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 315458113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -179.306}
+--- !u!4 &448822319 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1594762444524616714, guid: e3e710b9be1785546a29bb6e415079de, type: 3}
+  m_PrefabInstance: {fileID: 4581481279666014392}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &461126353
 GameObject:
   m_ObjectHideFlags: 0
@@ -3045,7 +3051,7 @@ GameObject:
   - component: {fileID: 1057744340}
   - component: {fileID: 1057744339}
   m_Layer: 0
-  m_Name: Healthbar other part
+  m_Name: FillSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3118,12 +3124,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1057744338}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -149.33, y: 141.53, z: -4}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.1958923, y: -0.5151367, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 210828261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1059338577 stripped
 Transform:
@@ -5404,6 +5410,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7121739757799015367, guid: e118d129ee7d0574bb40455132145aa1, type: 3}
   m_PrefabInstance: {fileID: 1484116336}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1964873730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1964873732}
+  - component: {fileID: 1964873731}
+  m_Layer: 0
+  m_Name: BossHealthBar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1964873731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964873730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7b6f43dd89cc54d9dfe720c5372560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealthBarFollow
+  cameraTarget: {fileID: 448822319}
+  bossHealth: {fileID: 1752532407}
+  fillTransform: {fileID: 1057744340}
+  offset: {x: 0, y: 2, z: 5}
+  fullWidthScale: 1
+  emptyWidthScale: 0
+--- !u!4 &1964873732
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964873730}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -115.46689, y: 101.02348, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 210828261}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1970537729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5119977182641347192, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
@@ -5627,6 +5684,10 @@ PrefabInstance:
       propertyPath: downSprite3
       value: 
       objectReference: {fileID: 21300000, guid: b78dba8bad629b6498faa6e9834be94b, type: 3}
+    - target: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+      propertyPath: healthSprite
+      value: 
+      objectReference: {fileID: 1057744340}
     - target: {fileID: 3970577020192401506, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
       propertyPath: player
       value: 
@@ -5898,5 +5959,4 @@ SceneRoots:
   - {fileID: 580134869}
   - {fileID: 1022413112}
   - {fileID: 1656245950}
-  - {fileID: 210828261}
-  - {fileID: 1057744340}
+  - {fileID: 1964873732}
