@@ -19,66 +19,77 @@ public class HandHealth : MonoBehaviour
     public Sprite upSprite3;
 
     private SpriteRenderer spriteRenderer;
+    private EyeTracker eyeTracker;
 
     private void Start()
     {
         currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Automatically find the AI script if you forgot to drag it in
-        if (armAI == null) armAI = GetComponentInParent<BossArmAI>();
+        if (armAI == null)
+            armAI = GetComponentInParent<BossArmAI>();
+
+        eyeTracker = FindObjectOfType<EyeTracker>();
 
         UpdateSprite();
     }
 
     private void Update()
     {
-        // We update every frame to catch the moment the AI state changes
         UpdateSprite();
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        currentHealth = Mathf.Max(0, currentHealth);
+        currentHealth = Mathf.Max(0f, currentHealth);
+
         Debug.Log($"Hand HP: {currentHealth}");
+
+        // 🔥 Eye reaction on damage
+        if (eyeTracker != null)
+        {
+            eyeTracker.TriggerJitter();
+        }
+
         UpdateSprite();
     }
 
     private void UpdateSprite()
     {
-        if (armAI == null) return;
+        if (armAI == null || spriteRenderer == null) return;
 
         float healthPercent = currentHealth / maxHealth;
+
         int stage;
 
-        // Health Stage Logic
-        if (healthPercent > 0.66f) stage = 0;
-        else if (healthPercent > 0.33f) stage = 1;
-        else stage = 2;
+        if (healthPercent > 0.66f)
+            stage = 0;
+        else if (healthPercent > 0.33f)
+            stage = 1;
+        else
+            stage = 2;
 
-        // DECISION LOGIC: Use the AI state instead of movement velocity
-        // We use Down Sprites ONLY during the Slam state.
         bool useDownSprites = (armAI.currentState == BossArmAI.State.Slam);
+
+        Sprite targetSprite = null;
 
         if (useDownSprites)
         {
-            switch (stage)
-            {
-                case 0: spriteRenderer.sprite = downSprite1; break;
-                case 1: spriteRenderer.sprite = downSprite2; break;
-                case 2: spriteRenderer.sprite = downSprite3; break;
-            }
+            if (stage == 0) targetSprite = downSprite1;
+            else if (stage == 1) targetSprite = downSprite2;
+            else targetSprite = downSprite3;
         }
         else
         {
-            // Use Up Sprites for Patrol, Windup, and Retract
-            switch (stage)
-            {
-                case 0: spriteRenderer.sprite = upSprite1; break;
-                case 1: spriteRenderer.sprite = upSprite2; break;
-                case 2: spriteRenderer.sprite = upSprite3; break;
-            }
+            if (stage == 0) targetSprite = upSprite1;
+            else if (stage == 1) targetSprite = upSprite2;
+            else targetSprite = upSprite3;
+        }
+
+        if (targetSprite != null && spriteRenderer.sprite != targetSprite)
+        {
+            spriteRenderer.sprite = targetSprite;
         }
     }
 }
