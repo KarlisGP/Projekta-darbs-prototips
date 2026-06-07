@@ -3,17 +3,18 @@ using UnityEngine;
 public class HandHealth : MonoBehaviour
 {
     [Header("References")]
-    public BossArmAI armAI; // Drag the object with BossArmAI here
+    public BossArmAI armAI;
+    public GameUIManager uiManager; // Add this reference in the Inspector
 
     [Header("Health")]
     public float maxHealth = 100f;
     public float currentHealth;
+    private bool isDead = false; // Prevents triggering win screen multiple times
 
     [Header("Sprites (Damaged versions)")]
     public Sprite downSprite1;
     public Sprite downSprite2;
     public Sprite downSprite3;
-
     public Sprite upSprite1;
     public Sprite upSprite2;
     public Sprite upSprite3;
@@ -29,6 +30,10 @@ public class HandHealth : MonoBehaviour
         if (armAI == null)
             armAI = GetComponentInParent<BossArmAI>();
 
+        // Automatically try to find the UI Manager if not assigned
+        if (uiManager == null)
+            uiManager = FindObjectOfType<GameUIManager>();
+
         eyeTracker = FindObjectOfType<EyeTracker>();
 
         UpdateSprite();
@@ -41,18 +46,36 @@ public class HandHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (isDead) return;
+
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
 
         Debug.Log($"Hand HP: {currentHealth}");
 
-        // 🔥 Eye reaction on damage
         if (eyeTracker != null)
-        {
             eyeTracker.TriggerJitter();
-        }
 
         UpdateSprite();
+
+        // CHECK FOR WIN CONDITION
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        isDead = true;
+        if (uiManager != null)
+        {
+            uiManager.ShowWinScreen();
+        }
+        else
+        {
+            Debug.LogError("Win Screen triggered but GameUIManager is missing from the scene!");
+        }
     }
 
     private void UpdateSprite()
@@ -60,20 +83,10 @@ public class HandHealth : MonoBehaviour
         if (armAI == null || spriteRenderer == null) return;
 
         float healthPercent = currentHealth / maxHealth;
-
-        int stage;
-
-        if (healthPercent > 0.66f)
-            stage = 0;
-        else if (healthPercent > 0.33f)
-            stage = 1;
-        else
-            stage = 2;
-
+        int stage = (healthPercent > 0.66f) ? 0 : (healthPercent > 0.33f ? 1 : 2);
         bool useDownSprites = (armAI.currentState == BossArmAI.State.Slam);
 
         Sprite targetSprite = null;
-
         if (useDownSprites)
         {
             if (stage == 0) targetSprite = downSprite1;
@@ -88,8 +101,6 @@ public class HandHealth : MonoBehaviour
         }
 
         if (targetSprite != null && spriteRenderer.sprite != targetSprite)
-        {
             spriteRenderer.sprite = targetSprite;
-        }
     }
 }

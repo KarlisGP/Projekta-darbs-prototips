@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &7091117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4215,6 +4215,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3470144244042289855, guid: a7c4c481d4a8c3047bbc3c8fec85070f, type: 3}
+      propertyPath: handDamage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8762155395128199472, guid: a7c4c481d4a8c3047bbc3c8fec85070f, type: 3}
       propertyPath: m_Name
       value: Blades 2
@@ -5815,6 +5819,10 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 7091121}
     - target: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
       propertyPath: upSprite1
       value: 

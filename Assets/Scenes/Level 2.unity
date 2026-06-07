@@ -133,7 +133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -310,7 +310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -508,7 +508,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -815,7 +815,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -992,7 +992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -1190,6 +1190,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566454915}
   m_CullTransparentMesh: 1
+--- !u!4 &573922814 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4881824110970117022, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+  m_PrefabInstance: {fileID: 1111583075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &594683018 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8927031497784332704, guid: e3e710b9be1785546a29bb6e415079de, type: 3}
@@ -1547,6 +1552,79 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IcePlatform
   slipperyEffect: 1
+--- !u!1001 &977932670
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 573922814}
+    m_Modifications:
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6916917
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.44929093
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.997
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1882613269914677943, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5293974967964831299, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_Name
+      value: Blades
+      objectReference: {fileID: 0}
+    - target: {fileID: 7717020549696519222, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
 --- !u!1001 &1018019137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1565,7 +1643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -1855,12 +1933,16 @@ PrefabInstance:
       value: WallGoUp
       objectReference: {fileID: 0}
     - target: {fileID: 2820834829059255992, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 9.270138
+      objectReference: {fileID: 0}
+    - target: {fileID: 2820834829059255992, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.6244
       objectReference: {fileID: 0}
     - target: {fileID: 2820834829059255992, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: -0.6836
       objectReference: {fileID: 0}
     - target: {fileID: 3063134457676846907, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1926,9 +2008,17 @@ PrefabInstance:
       propertyPath: speed
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 8770930485910279551, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7921552488796723259, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4881824110970117022, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1941989389}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
 --- !u!1 &1118780144
@@ -2143,7 +2233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -2300,7 +2390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -2819,7 +2909,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -3503,7 +3593,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -3583,7 +3673,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035890601526711007, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: m_TagString
-      value: Ice
+      value: Platform
       objectReference: {fileID: 0}
     - target: {fileID: 5093825113032275736, guid: d595fc578076fd94684eb38dcfc76432, type: 3}
       propertyPath: iceDrag
@@ -3746,6 +3836,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IcePlatform
   slipperyEffect: 1
+--- !u!4 &1941989389 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 269484248747866304, guid: 51588bc97b17a994f9f4c2d5a6e7b7f6, type: 3}
+  m_PrefabInstance: {fileID: 977932670}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2095393137
 PrefabInstance:
   m_ObjectHideFlags: 0
