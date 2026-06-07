@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   targetHand: {fileID: 0}
-  damageAmount: 5
+  damageAmount: 1
   flyUpForce: 40
   spinSpeed: 400
 --- !u!50 &8522888948242577079
