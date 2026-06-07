@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4910040696750117338}
   - component: {fileID: 8540944920209818050}
   - component: {fileID: 4613408099881174634}
+  - component: {fileID: 4244860393194890339}
   m_Layer: 6
   m_Name: Ice
   m_TagString: Platform
@@ -184,3 +185,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlatformMaterial
   jumpSound: {fileID: 8300000, guid: b28ee7d6262e9f9449a8488a4855d183, type: 3}
+--- !u!50 &4244860393194890339
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5035890601526711007}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
