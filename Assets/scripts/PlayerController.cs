@@ -23,15 +23,16 @@ public class PlayerController : MonoBehaviour
     public AudioClip defaultJumpSound;
     public AudioClip airJumpSound;
 
-    [Header("Death")]
+    [Header("Death Settings")]
     public float maxHealth = 100f;
     public float currentHealth;
     private bool isDead = false;
-
     public AudioClip deathSound;
+    [Tooltip("Drag the object playing the boss music here")]
+    public AudioSource bossMusicSource; 
 
-    // 🎵 IMPORTANT: assign the AudioSource that plays boss music here
-    public AudioSource bossMusicSource;
+    [Header("UI Reference")]
+    public GameUIManager uiManager; 
 
     [Header("Speed Boost")]
     public float speedMultiplier = 1f;
@@ -71,6 +72,9 @@ public class PlayerController : MonoBehaviour
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
+
+        if (uiManager == null)
+            uiManager = FindObjectOfType<GameUIManager>();
 
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
@@ -206,6 +210,22 @@ public class PlayerController : MonoBehaviour
     }
 
     // =========================
+    // 🌀 TELEPORT RESET
+    // =========================
+    public void ResetMovement()
+    {
+        moveX = 0;
+        idleTimer = 0f;
+        isJumpStarting = false;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.Sleep(); 
+        }
+    }
+
+    // =========================
     // 💀 DAMAGE + DEATH SYSTEM
     // =========================
 
@@ -216,55 +236,52 @@ public class PlayerController : MonoBehaviour
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
 
-        Debug.Log($"Player HP: {currentHealth}");
-
         if (currentHealth <= 0f)
         {
             Die();
         }
     }
 
-    private void Die()
+    public void Die()
     {
         if (isDead) return;
-
         isDead = true;
 
-        Debug.Log("Player died!");
+        Debug.Log("Player Die() Triggered - Stopping ALL Audio");
 
-        // 🛑 STOP BOSS MUSIC (SAFE CHECK)
-        if (bossMusicSource != null)
+        // 1. FORCE STOP EVERY AUDIO SOURCE IN THE SCENE
+        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+        foreach (AudioSource s in allAudioSources)
         {
-            bossMusicSource.Stop();
-        }
-        else
-        {
-            Debug.LogWarning("Boss music source NOT assigned!");
+            s.Stop();
         }
 
-        // 🔊 PLAY DEATH SOUND (WILL NOT GET CUT OFF)
+        // 2. PLAY DEATH SOUND 
+        // We do this AFTER stopping everything else so it doesn't get muted
         if (deathSound != null)
         {
             AudioSource.PlayClipAtPoint(deathSound, transform.position);
         }
-        else
+
+        // 3. DISABLE PHYSICS
+        if (rb != null)
         {
-            Debug.LogWarning("Death sound not assigned!");
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false; 
         }
 
-        rb.linearVelocity = Vector2.zero;
+        // 4. SHOW UI
+        if (uiManager != null)
+        {
+            uiManager.ShowDeathScreen();
+        }
 
-        StartCoroutine(DisablePlayer());
-    }
-
-    private IEnumerator DisablePlayer()
-    {
-        yield return new WaitForSeconds(0.05f);
+        // 5. DISABLE THIS SCRIPT
         this.enabled = false;
     }
 
     // =========================
-    // BOOST SYSTEM (UNCHANGED)
+    // BOOST SYSTEM
     // =========================
 
     public void GiveExtraJump(int amount)

@@ -11,6 +11,7 @@ TagManager:
   - BoostPad
   - Ice
   - Music
+  - Boss
   layers:
   - Default
   - TransparentFX

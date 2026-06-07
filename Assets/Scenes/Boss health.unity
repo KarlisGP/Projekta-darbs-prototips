@@ -1104,6 +1104,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &278767549 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+  m_PrefabInstance: {fileID: 1378106144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278767534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75be48787c37dd34384f23ef2f4241bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandHealth
 --- !u!4 &283038223 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7121739757799015367, guid: e118d129ee7d0574bb40455132145aa1, type: 3}
@@ -3228,7 +3239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4733d858d6d73c4cbc7c01525b7c335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandDamageTrigger
-  targetHand: {fileID: 0}
+  targetHand: {fileID: 278767549}
   damageAmount: 25
   hitCooldown: 2
 --- !u!61 &1175802847
@@ -3697,6 +3708,10 @@ PrefabInstance:
     - target: {fileID: 4152604996100915418, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
       propertyPath: m_Name
       value: Arm
+      objectReference: {fileID: 0}
+    - target: {fileID: 4152604996100915418, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+      propertyPath: m_TagString
+      value: Boss
       objectReference: {fileID: 0}
     - target: {fileID: 7439412317911624409, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
       propertyPath: m_LocalScale.x

@@ -1,38 +1,38 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DestructiveCube : MonoBehaviour
 {
-    public int damageToHand = 20;
-    private HandHealth myHealth;
-    private GameUIManager uiManager;
-
-    void Start()
-    {
-        myHealth = GetComponent<HandHealth>();
-        uiManager = FindObjectOfType<GameUIManager>();
-    }
+    [Header("Settings")]
+    public float damageToHand = 20f;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 1. Kill Player
+        // 1. Check for Player
         if (other.CompareTag("Player"))
         {
-            if (uiManager != null) 
+            PlayerController player = other.GetComponent<PlayerController>();
+            if (player != null)
             {
-                uiManager.ShowDeathScreen();
-            }
-            else 
-            {
-                // Fallback if uiManager isn't found
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                // We call Die() on the player so that the music stops 
+                // and the death sound plays correctly.
+                player.Die();
             }
         }
 
-        // 2. Handle Platforms
+        // 2. Check for Boss Hand (Optional - based on your variables)
+        if (other.CompareTag("Boss")) // Make sure your Boss Hand has this tag
+        {
+            HandHealth hand = other.GetComponent<HandHealth>();
+            if (hand != null)
+            {
+                hand.TakeDamage(damageToHand);
+            }
+        }
+
+        // 3. Handle Platforms (Destroy them if they touch the cube)
         if (other.CompareTag("Platform"))
-        { // <--- This was missing
+        {
             Destroy(other.gameObject);
-        } // <--- This was closing the method early because of the missing one above
+        }
     }
 }
