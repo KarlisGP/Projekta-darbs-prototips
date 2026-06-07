@@ -18,25 +18,21 @@ public class DestructiveCube : MonoBehaviour
         // 1. Kill Player
         if (other.CompareTag("Player"))
         {
-            if (uiManager != null) uiManager.ShowDeathScreen();
-            else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            if (uiManager != null) 
+            {
+                uiManager.ShowDeathScreen();
+            }
+            else 
+            {
+                // Fallback if uiManager isn't found
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
 
         // 2. Handle Platforms
         if (other.CompareTag("Platform"))
-        {
-            // If the platform is an Ice cube, damage the hand
-            // We check the name for "Ice" (Case sensitive: "Ice")
-            if (other.gameObject.name.Contains("Ice"))
-            {
-                if (myHealth != null)
-                {
-                    myHealth.TakeDamage(damageToHand);
-                }
-            }
-
-            // Destroy the platform regardless of what it is
+        { // <--- This was missing
             Destroy(other.gameObject);
-        }
+        } // <--- This was closing the method early because of the missing one above
     }
 }
