@@ -3118,6 +3118,22 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1970537729}
+    - target: {fileID: 1463776230222228724, guid: 82d5eef1e35a2054a820471b3f6c853b, type: 3}
+      propertyPath: jitterSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1463776230222228724, guid: 82d5eef1e35a2054a820471b3f6c853b, type: 3}
+      propertyPath: jitterDuration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1463776230222228724, guid: 82d5eef1e35a2054a820471b3f6c853b, type: 3}
+      propertyPath: jitterStrength
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1463776230222228724, guid: 82d5eef1e35a2054a820471b3f6c853b, type: 3}
+      propertyPath: minTimeBetweenBlinks
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 2255396656806683041, guid: 82d5eef1e35a2054a820471b3f6c853b, type: 3}
       propertyPath: m_Name
       value: Johns eye
@@ -5966,7 +5982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1594762444524616714, guid: e3e710b9be1785546a29bb6e415079de, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 20.1
+      value: 37.3
       objectReference: {fileID: 0}
     - target: {fileID: 1594762444524616714, guid: e3e710b9be1785546a29bb6e415079de, type: 3}
       propertyPath: m_LocalPosition.z
