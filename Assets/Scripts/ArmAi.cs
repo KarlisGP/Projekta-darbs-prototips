@@ -13,7 +13,7 @@ public class BossArmAI : MonoBehaviour
 
     [Header("Detection Settings")]
     public float detectionWidth = 2.0f; 
-    public float detectionHeight = 40.0f; // INCREASED: How far down the box goes
+    public float detectionHeight = 40.0f; 
     public float detectionTime = 3f;
 
     [Header("Movement Settings")]
@@ -43,7 +43,7 @@ public class BossArmAI : MonoBehaviour
     void PatrolLogic()
     {
         // 1. SYNC UPWARD MOVEMENT: 
-        // The arm matches the Home Marker's Y exactly. No more drifting!
+        // Matches the Home Marker's Y exactly so it moves with the scrolling level
         float targetY = armHome.position.y;
 
         // 2. PATROL LEFT/RIGHT
@@ -53,12 +53,10 @@ public class BossArmAI : MonoBehaviour
         // Apply position
         transform.position = new Vector3(targetX, targetY, transform.position.z);
 
-        // 3. DETECTION: Checks if player is in the "Cyan Zone"
+        // 3. DETECTION: Checks if player is below the arm
         if (player != null)
         {
-            // Check horizontal distance
             float xDiff = Mathf.Abs(transform.position.x - player.position.x);
-            // Check vertical distance (is player below the arm?)
             float yDiff = transform.position.y - player.position.y;
 
             if (xDiff < detectionWidth && yDiff > 0 && yDiff < detectionHeight)
@@ -78,7 +76,7 @@ public class BossArmAI : MonoBehaviour
         currentState = State.Windup;
         detectionTimer = 0;
 
-        // Shake
+        // Shake effect
         float elapsed = 0;
         while (elapsed < 1f) 
         {
@@ -89,7 +87,7 @@ public class BossArmAI : MonoBehaviour
         }
 
         currentState = State.Slam;
-        // Slam down until we reach the Y of the armTarget marker
+        // Move entire arm down to the Target marker
         while (transform.position.y > armTarget.position.y + 0.2f)
         {
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, armTarget.position.y, transform.position.z), slamSpeed * Time.deltaTime);
@@ -99,7 +97,7 @@ public class BossArmAI : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Stay at bottom
 
         currentState = State.Retract;
-        // Back to Home Marker
+        // Move entire arm back up to the Home marker
         while (Vector3.Distance(transform.position, new Vector3(transform.position.x, armHome.position.y, transform.position.z)) > 0.1f)
         {
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, armHome.position.y, transform.position.z), retractSpeed * Time.deltaTime);
@@ -112,7 +110,6 @@ public class BossArmAI : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        // Draws the detection box from the arm down to the detectionHeight
         Vector3 boxCenter = transform.position + Vector3.down * (detectionHeight / 2);
         Vector3 boxSize = new Vector3(detectionWidth * 2, detectionHeight, 1);
         Gizmos.DrawWireCube(boxCenter, boxSize);

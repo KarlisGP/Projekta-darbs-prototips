@@ -2,11 +2,14 @@ using UnityEngine;
 
 public class HandHealth : MonoBehaviour
 {
+    [Header("References")]
+    public BossArmAI armAI; // Drag the object with BossArmAI here
+
     [Header("Health")]
     public float maxHealth = 100f;
     public float currentHealth;
 
-    [Header("Sprites")]
+    [Header("Sprites (Damaged versions)")]
     public Sprite downSprite1;
     public Sprite downSprite2;
     public Sprite downSprite3;
@@ -15,27 +18,22 @@ public class HandHealth : MonoBehaviour
     public Sprite upSprite2;
     public Sprite upSprite3;
 
-    [Header("Movement")]
-    public bool movingUp;
-
     private SpriteRenderer spriteRenderer;
-    private float previousY;
 
     private void Start()
     {
         currentHealth = maxHealth;
-
         spriteRenderer = GetComponent<SpriteRenderer>();
-        previousY = transform.position.y;
+
+        // Automatically find the AI script if you forgot to drag it in
+        if (armAI == null) armAI = GetComponentInParent<BossArmAI>();
 
         UpdateSprite();
     }
 
     private void Update()
     {
-        movingUp = transform.position.y > previousY;
-        previousY = transform.position.y;
-
+        // We update every frame to catch the moment the AI state changes
         UpdateSprite();
     }
 
@@ -43,26 +41,27 @@ public class HandHealth : MonoBehaviour
     {
         currentHealth -= damage;
         currentHealth = Mathf.Max(0, currentHealth);
-
         Debug.Log($"Hand HP: {currentHealth}");
-
         UpdateSprite();
     }
 
     private void UpdateSprite()
     {
-        float healthPercent = currentHealth / maxHealth;
+        if (armAI == null) return;
 
+        float healthPercent = currentHealth / maxHealth;
         int stage;
 
-        if (healthPercent > 0.66f)
-            stage = 0;
-        else if (healthPercent > 0.33f)
-            stage = 1;
-        else
-            stage = 2;
+        // Health Stage Logic
+        if (healthPercent > 0.66f) stage = 0;
+        else if (healthPercent > 0.33f) stage = 1;
+        else stage = 2;
 
-        if (!movingUp)
+        // DECISION LOGIC: Use the AI state instead of movement velocity
+        // We use Down Sprites ONLY during the Slam state.
+        bool useDownSprites = (armAI.currentState == BossArmAI.State.Slam);
+
+        if (useDownSprites)
         {
             switch (stage)
             {
@@ -73,6 +72,7 @@ public class HandHealth : MonoBehaviour
         }
         else
         {
+            // Use Up Sprites for Patrol, Windup, and Retract
             switch (stage)
             {
                 case 0: spriteRenderer.sprite = upSprite1; break;
