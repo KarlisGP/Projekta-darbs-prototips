@@ -1566,7 +1566,7 @@ MonoBehaviour:
   itemPrefabs:
   - {fileID: 999912267907959071, guid: 1ee690239408d494b898d8e684f0f3c6, type: 3}
   spawnPoint: {fileID: 1662030886}
-  spawnInterval: 5
+  spawnInterval: 1
   horizontalRange: 22
   verticalRange: 15
   spawnZ: -1
@@ -3055,6 +3055,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3470144244042289855, guid: a7c4c481d4a8c3047bbc3c8fec85070f, type: 3}
+      propertyPath: handDamage
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8762155395128199472, guid: a7c4c481d4a8c3047bbc3c8fec85070f, type: 3}
       propertyPath: m_Name
       value: Blades 2
@@ -3469,6 +3473,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 357123927378938901, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+      propertyPath: damageToHand
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
       propertyPath: armAI
       value: 
@@ -3493,6 +3501,14 @@ PrefabInstance:
       propertyPath: upSprite3
       value: 
       objectReference: {fileID: 21300000, guid: 574d77034e045bf489535f93a8bfa9d0, type: 3}
+    - target: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 20c33e2994d13834ea93a788292e3342, type: 3}
+    - target: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+      propertyPath: damageSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 8cc1ee042be58d54689dcc2afeba0297, type: 3}
     - target: {fileID: 3955354546310512842, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
       propertyPath: downSprite1
       value: 
