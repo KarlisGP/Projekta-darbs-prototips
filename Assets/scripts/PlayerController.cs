@@ -242,44 +242,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Inside PlayerController.cs -> Die() function
     public void Die()
     {
         if (isDead) return;
         isDead = true;
 
-        Debug.Log("Player Die() Triggered - Stopping ALL Audio");
+        // 1. Stop all music
+        AudioSource[] allAudio = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
+        foreach (AudioSource s in allAudio) s.Stop();
 
-        // 1. FORCE STOP EVERY AUDIO SOURCE IN THE SCENE
-        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
-        foreach (AudioSource s in allAudioSources)
-        {
-            s.Stop();
-        }
-
-        // 2. PLAY DEATH SOUND 
-        // We do this AFTER stopping everything else so it doesn't get muted
+        // 2. Play death sound
         if (deathSound != null)
         {
-            AudioSource.PlayClipAtPoint(deathSound, transform.position);
+            // Create a separate object for the sound so it doesn't stop 
+            // when the player script is disabled.
+            AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position);
         }
 
-        // 3. DISABLE PHYSICS
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.simulated = false; 
-        }
-
-        // 4. SHOW UI
-        if (uiManager != null)
-        {
-            uiManager.ShowDeathScreen();
-        }
-
-        // 5. DISABLE THIS SCRIPT
-        this.enabled = false;
+        if (uiManager != null) uiManager.ShowDeathScreen();
+    
+        rb.simulated = false; // Stop physics
+        this.enabled = false; // Stop player movement
     }
-
     // =========================
     // BOOST SYSTEM
     // =========================

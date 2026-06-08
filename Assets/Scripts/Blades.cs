@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class Blades : MonoBehaviour
 {
-    private static bool gameIsOver = false;
     private GameUIManager uiManager;
 
     [Header("Hand Damage")]
@@ -11,60 +10,52 @@ public class Blades : MonoBehaviour
 
     void Start()
     {
-        gameIsOver = false;
         uiManager = FindObjectOfType<GameUIManager>();
     }
 
+    // This handles triggers
     private void OnTriggerEnter2D(Collider2D other)
     {
         HandleContact(other.gameObject);
     }
 
+    // This handles solid collisions (just in case)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HandleContact(collision.gameObject);
+    }
+
     private void HandleContact(GameObject other)
     {
-        // Damage giant hand
-        HandHealth hand = other.GetComponent<HandHealth>();
-
+        // 1. DAMAGE GIANT HAND
+        HandHealth hand = other.GetComponentInParent<HandHealth>();
         if (hand != null)
         {
             hand.TakeDamage(handDamage);
-            return;
+            return; // Exit so we don't try to kill the hand as a player
         }
 
-        // Kill player
-        if (other.CompareTag("Player") && !gameIsOver)
+        // 2. KILL PLAYER
+        if (other.CompareTag("Player"))
         {
-            gameIsOver = true;
-            GameOver(other.gameObject);
+            PlayerController player = other.GetComponentInParent<PlayerController>();
+            if (player != null)
+            {
+                // CRITICAL: We call the Player's Die() function.
+                // This is the function that stops the boss music and plays the death sound.
+                player.Die();
+            }
         }
 
-        // Destroy falling platforms
+        // 3. DESTROY FALLING PLATFORMS
         if (other.CompareTag("Platform"))
         {
             Destroy(other.gameObject);
         }
     }
 
-    private void GameOver(GameObject player)
-    {
-        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-
-        if (rb != null)
-            rb.linearVelocity = Vector2.zero;
-
-        if (uiManager != null)
-            uiManager.ShowDeathScreen();
-        else
-            Invoke(nameof(ReloadScene), 1f);
-    }
-
+    // This remains for your UI buttons to call
     public void Retry()
-    {
-        gameIsOver = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    private void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
