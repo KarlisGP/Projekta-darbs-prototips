@@ -910,7 +910,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
       propertyPath: maxHealth
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6283725412123916790, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
       propertyPath: deathSound
@@ -3311,6 +3311,10 @@ PrefabInstance:
       propertyPath: armTarget
       value: 
       objectReference: {fileID: 517420977}
+    - target: {fileID: 4146709878663535171, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4152604996100915418, guid: d0910a7f96b82924a86a949b1843128e, type: 3}
       propertyPath: m_Name
       value: Arm

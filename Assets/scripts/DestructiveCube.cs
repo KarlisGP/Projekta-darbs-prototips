@@ -5,34 +5,47 @@ public class DestructiveCube : MonoBehaviour
     [Header("Settings")]
     public float damageToHand = 20f;
 
+    // This handles objects set as "Trigger"
     private void OnTriggerEnter2D(Collider2D other)
     {
+        HandleImpact(other.gameObject);
+    }
+
+    // This handles objects set as "Solid Collision"
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HandleImpact(collision.gameObject);
+    }
+
+    private void HandleImpact(GameObject hitObject)
+    {
         // 1. Check for Player
-        if (other.CompareTag("Player"))
+        if (hitObject.CompareTag("Player"))
         {
-            PlayerController player = other.GetComponent<PlayerController>();
+            Debug.Log("DESTRUCTIVE CUBE: Hit Player!"); // Look for this in the Console
+            
+            // Search the hit object OR its parent for the script
+            PlayerController player = hitObject.GetComponentInParent<PlayerController>();
+            
             if (player != null)
             {
-                // We call Die() on the player so that the music stops 
-                // and the death sound plays correctly.
                 player.Die();
+            }
+            else
+            {
+                Debug.LogError("DESTRUCTIVE CUBE: Found Player tag, but NO PlayerController script!");
             }
         }
 
-        // 2. Check for Boss Hand (Optional - based on your variables)
-        if (other.CompareTag("Boss")) // Make sure your Boss Hand has this tag
+        // 2. Check for Boss
+        if (hitObject.CompareTag("Boss"))
         {
-            HandHealth hand = other.GetComponent<HandHealth>();
+            Debug.Log("DESTRUCTIVE CUBE: Hit Boss!");
+            HandHealth hand = hitObject.GetComponentInParent<HandHealth>();
             if (hand != null)
             {
                 hand.TakeDamage(damageToHand);
             }
-        }
-
-        // 3. Handle Platforms (Destroy them if they touch the cube)
-        if (other.CompareTag("Platform"))
-        {
-            Destroy(other.gameObject);
         }
     }
 }
