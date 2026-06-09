@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameUIManager : MonoBehaviour
@@ -9,6 +10,16 @@ public class GameUIManager : MonoBehaviour
     public GameObject winScreen;
     public GameObject pauseMenu;
 
+    [Header("Level Tutorial")]
+    public GameObject tutorialPanel;
+    public Image tutorialSlideImage;
+    public Sprite[] levelTutorialSlides;
+    public GameObject tutorialPrevButton;
+    public GameObject tutorialNextButton;
+    public GameObject tutorialSkipButton;
+    public GameObject tutorialPlayButton; // shown on last slide instead of next
+
+    private int currentSlide = 0;
     private bool isPaused = false;
     private bool gameIsActive = false;
 
@@ -17,16 +28,77 @@ public class GameUIManager : MonoBehaviour
         deathScreen.SetActive(false);
         winScreen.SetActive(false);
         pauseMenu.SetActive(false);
-        gameIsActive = true;
+
+        if (levelTutorialSlides != null && levelTutorialSlides.Length > 0)
+        {
+            Time.timeScale = 0f;
+            currentSlide = 0;
+            ShowTutorialSlide();
+            tutorialPanel.SetActive(true);
+        }
+        else
+        {
+            tutorialPanel.SetActive(false);
+            gameIsActive = true;
+        }
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
             TogglePause();
+    }
+
+    // --- Level Tutorial ---
+
+    void ShowTutorialSlide()
+    {
+        tutorialSlideImage.sprite = levelTutorialSlides[currentSlide];
+
+        bool isFirst = currentSlide == 0;
+        bool isLast = currentSlide == levelTutorialSlides.Length - 1;
+
+        if (tutorialPrevButton != null) tutorialPrevButton.SetActive(!isFirst);
+        if (tutorialNextButton != null) tutorialNextButton.SetActive(!isLast);
+        if (tutorialPlayButton != null) tutorialPlayButton.SetActive(isLast);
+    }
+
+    public void OnTutorialNext()
+    {
+        if (currentSlide < levelTutorialSlides.Length - 1)
+        {
+            currentSlide++;
+            ShowTutorialSlide();
         }
     }
+
+    public void OnTutorialPrev()
+    {
+        if (currentSlide > 0)
+        {
+            currentSlide--;
+            ShowTutorialSlide();
+        }
+    }
+
+    public void OnTutorialSkip()
+    {
+        DismissTutorial();
+    }
+
+    public void OnTutorialPlay()
+    {
+        DismissTutorial();
+    }
+
+    void DismissTutorial()
+    {
+        tutorialPanel.SetActive(false);
+        Time.timeScale = 1f;
+        gameIsActive = true;
+    }
+
+    // --- Screens ---
 
     IEnumerator LoadWithDelay(int sceneIndex)
     {
@@ -67,8 +139,8 @@ public class GameUIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         int nextScene = SceneManager.GetActiveScene().buildIndex + 1;
-        if (nextScene > 5)
-            StartCoroutine(LoadWithDelay(0));
+        if (nextScene > 6)
+            StartCoroutine(LoadWithDelay(1));
         else
             StartCoroutine(LoadWithDelay(nextScene));
     }
@@ -77,7 +149,7 @@ public class GameUIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         int previousScene = SceneManager.GetActiveScene().buildIndex - 1;
-        if (previousScene < 0) previousScene = 0;
+        if (previousScene < 1) previousScene = 1;
         StartCoroutine(LoadWithDelay(previousScene));
     }
 
@@ -90,7 +162,7 @@ public class GameUIManager : MonoBehaviour
     public void OnMainMenuButton()
     {
         Time.timeScale = 1f;
-        StartCoroutine(LoadWithDelay(0));
+        StartCoroutine(LoadWithDelay(1));
     }
 
     public void OnPauseButton()

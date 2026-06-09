@@ -251,12 +251,12 @@ public class UIManagerTWO : MonoBehaviour
     }
 
     // Level buttons now spin up before loading
-    public void LoadLevel1() { PlayClick(); StartCoroutine(SpinUpThenLoad(1)); }
-    public void LoadLevel2() { PlayClick(); StartCoroutine(SpinUpThenLoad(2)); }
-    public void LoadLevel3() { PlayClick(); StartCoroutine(SpinUpThenLoad(3)); }
-    public void LoadLevel4() { PlayClick(); StartCoroutine(SpinUpThenLoad(4)); }
-    public void LoadLevel5() { PlayClick(); StartCoroutine(SpinUpThenLoad(5)); }
-
+    public void LoadLevel1() { PlayClick(); StartCoroutine(SpinUpThenLoad(2)); }
+    public void LoadLevel2() { PlayClick(); StartCoroutine(SpinUpThenLoad(3)); }
+    public void LoadLevel3() { PlayClick(); StartCoroutine(SpinUpThenLoad(4)); }
+    public void LoadLevel4() { PlayClick(); StartCoroutine(SpinUpThenLoad(5)); }
+    public void LoadLevel5() { PlayClick(); StartCoroutine(SpinUpThenLoad(6)); }
+    
     public void OnLevelSelectorBackButton()
     {
         PlayClick();
@@ -328,7 +328,7 @@ public class UIManagerTWO : MonoBehaviour
     {
         PlayClick();
         Time.timeScale = 1f;
-        StartCoroutine(LoadWithDelay(0));
+        StartCoroutine(LoadWithDelay(1)); // menu is now index 1
     }
 
     public void OnBackButton()
