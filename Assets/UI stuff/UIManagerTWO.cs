@@ -28,7 +28,7 @@ public class UIManagerTWO : MonoBehaviour
 
     [Header("Tutorial Browser (Settings)")]
     public Image browserTutorialImage;
-    public Sprite[] browserTutorialSlides;  // drag all your tutorial sprites in here
+    public Sprite[] browserTutorialSlides;
     public GameObject browserPrevButton;
     public GameObject browserNextButton;
 
@@ -172,7 +172,6 @@ public class UIManagerTWO : MonoBehaviour
         if (browserTutorialImage != null && browserTutorialSlides.Length > 0)
             browserTutorialImage.sprite = browserTutorialSlides[browserSlide];
 
-        // Hide prev on first slide, hide next on last slide
         if (browserPrevButton != null)
             browserPrevButton.SetActive(browserSlide > 0);
 
@@ -250,13 +249,18 @@ public class UIManagerTWO : MonoBehaviour
         levelSelectorScreen.SetActive(true);
     }
 
-    // Level buttons now spin up before loading
-    public void LoadLevel1() { PlayClick(); StartCoroutine(SpinUpThenLoad(2)); }
-    public void LoadLevel2() { PlayClick(); StartCoroutine(SpinUpThenLoad(3)); }
-    public void LoadLevel3() { PlayClick(); StartCoroutine(SpinUpThenLoad(4)); }
-    public void LoadLevel4() { PlayClick(); StartCoroutine(SpinUpThenLoad(5)); }
-    public void LoadLevel5() { PlayClick(); StartCoroutine(SpinUpThenLoad(6)); }
-    
+    // Levels 1-10: scene indices 2-11
+    public void LoadLevel1()  { PlayClick(); StartCoroutine(SpinUpThenLoad(2));  }
+    public void LoadLevel2()  { PlayClick(); StartCoroutine(SpinUpThenLoad(3));  }
+    public void LoadLevel3()  { PlayClick(); StartCoroutine(SpinUpThenLoad(4));  }
+    public void LoadLevel4()  { PlayClick(); StartCoroutine(SpinUpThenLoad(5));  }
+    public void LoadLevel5()  { PlayClick(); StartCoroutine(SpinUpThenLoad(6));  }
+    public void LoadLevel6()  { PlayClick(); StartCoroutine(SpinUpThenLoad(7));  }
+    public void LoadLevel7()  { PlayClick(); StartCoroutine(SpinUpThenLoad(8));  }
+    public void LoadLevel8()  { PlayClick(); StartCoroutine(SpinUpThenLoad(9));  }
+    public void LoadLevel9()  { PlayClick(); StartCoroutine(SpinUpThenLoad(10)); }
+    public void LoadLevel10() { PlayClick(); StartCoroutine(SpinUpThenLoad(11)); }
+
     public void OnLevelSelectorBackButton()
     {
         PlayClick();
@@ -328,7 +332,7 @@ public class UIManagerTWO : MonoBehaviour
     {
         PlayClick();
         Time.timeScale = 1f;
-        StartCoroutine(LoadWithDelay(1)); // menu is now index 1
+        StartCoroutine(LoadWithDelay(1));
     }
 
     public void OnBackButton()
