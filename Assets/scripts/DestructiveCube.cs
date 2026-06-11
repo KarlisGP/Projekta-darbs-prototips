@@ -22,9 +22,7 @@ public class DestructiveCube : MonoBehaviour
         // 1. Check for Player
         if (hitObject.CompareTag("Player"))
         {
-            Debug.Log("DESTRUCTIVE CUBE: Hit Player!"); // Look for this in the Console
-            
-            // Search the hit object OR its parent for the script
+            Debug.Log("DESTRUCTIVE CUBE: Hit Player!");
             PlayerController player = hitObject.GetComponentInParent<PlayerController>();
             
             if (player != null)
@@ -46,6 +44,17 @@ public class DestructiveCube : MonoBehaviour
             {
                 hand.TakeDamage(damageToHand);
             }
+        }
+
+        // 3. Check for Platform <--- ADDED THIS
+        if (hitObject.CompareTag("Platform"))
+        {
+            Debug.Log("DESTRUCTIVE CUBE: Destroyed a Platform!");
+            Destroy(hitObject); // This destroys the platform that was hit
+            
+            // Optional: If you want the cube itself to disappear after hitting a platform, 
+            // uncomment the line below:
+            // Destroy(gameObject); 
         }
     }
 }
