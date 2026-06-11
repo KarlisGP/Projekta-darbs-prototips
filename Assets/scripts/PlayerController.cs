@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     private bool facingRight = true;
     private bool isJumpStarting = false;
 
+    // NEW: wall movement lock
+    private bool movementLocked = false;
+
     [Header("Extra Jump")]
     public int baseExtraJumps = 0;
     private int extraJumpsAllowed;
@@ -28,11 +31,10 @@ public class PlayerController : MonoBehaviour
     public float currentHealth;
     private bool isDead = false;
     public AudioClip deathSound;
-    [Tooltip("Drag the object playing the boss music here")]
-    public AudioSource bossMusicSource; 
+    public AudioSource bossMusicSource;
 
     [Header("UI Reference")]
-    public GameUIManager uiManager; 
+    public GameUIManager uiManager;
 
     [Header("Speed Boost")]
     public float speedMultiplier = 1f;
@@ -84,7 +86,8 @@ public class PlayerController : MonoBehaviour
     {
         if (isDead) return;
 
-        moveX = Input.GetAxis("Horizontal");
+        // NEW: block input if locked
+        moveX = movementLocked ? 0f : Input.GetAxis("Horizontal");
 
         if (groundCheck == null) return;
 
@@ -186,18 +189,21 @@ public class PlayerController : MonoBehaviour
         extraJumpsAllowed = baseExtraJumps;
         extraJumpsRemaining = extraJumpsAllowed;
     }
-
     void FixedUpdate()
     {
         if (isDead) return;
 
-        if (Mathf.Abs(moveX) > 0.01f)
-        {
-            rb.linearVelocity = new Vector2(
-                moveX * moveSpeed * speedMultiplier,
-                rb.linearVelocity.y
-            );
-        }
+        float targetX = moveX * moveSpeed * speedMultiplier;
+
+        float newX = movementLocked
+            ? 0f
+            : targetX;
+
+        // preserve external physics influences better
+        rb.linearVelocity = new Vector2(
+            newX,
+            rb.linearVelocity.y
+        );
     }
 
     void Flip()
@@ -210,23 +216,42 @@ public class PlayerController : MonoBehaviour
     }
 
     // =========================
-    // 🌀 TELEPORT RESET
+    // 🧱 WALL MOVEMENT LOCK
     // =========================
+
+    public void LockMovement()
+    {
+        movementLocked = true;
+
+        // stop horizontal drift immediately
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+    }
+
+    public void UnlockMovement()
+    {
+        movementLocked = false;
+    }
+
+    // =========================
+    // RESET
+    // =========================
+
     public void ResetMovement()
     {
         moveX = 0;
         idleTimer = 0f;
         isJumpStarting = false;
+
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
-            rb.Sleep(); 
+            rb.Sleep();
         }
     }
 
     // =========================
-    // 💀 DAMAGE + DEATH SYSTEM
+    // DAMAGE + DEATH
     // =========================
 
     public void TakeDamage(float damage)
@@ -237,34 +262,26 @@ public class PlayerController : MonoBehaviour
         currentHealth = Mathf.Max(0f, currentHealth);
 
         if (currentHealth <= 0f)
-        {
             Die();
-        }
     }
 
-    // Inside PlayerController.cs -> Die() function
     public void Die()
     {
         if (isDead) return;
         isDead = true;
 
-        // 1. Stop all music
         AudioSource[] allAudio = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
         foreach (AudioSource s in allAudio) s.Stop();
 
-        // 2. Play death sound
         if (deathSound != null)
-        {
-            // Create a separate object for the sound so it doesn't stop 
-            // when the player script is disabled.
             AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position);
-        }
 
         if (uiManager != null) uiManager.ShowDeathScreen();
-    
-        rb.simulated = false; // Stop physics
-        this.enabled = false; // Stop player movement
+
+        rb.simulated = false;
+        this.enabled = false;
     }
+
     // =========================
     // BOOST SYSTEM
     // =========================

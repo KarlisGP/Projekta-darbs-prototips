@@ -706,6 +706,18 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6216758498446693364, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 438d4239c66215a448e5c0f3ce96d04b, type: 2}
+    - target: {fileID: 6742487380053242208, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+      propertyPath: slipperyEffect
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960113873440474591, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 438d4239c66215a448e5c0f3ce96d04b, type: 2}
     - target: {fileID: 8470470375490436174, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
       propertyPath: speed
       value: 6
@@ -717,7 +729,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3650041828053240012, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2139930205}
   m_SourcePrefab: {fileID: 100100000, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
 --- !u!1 &585486154
 GameObject:
@@ -4146,6 +4161,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5119977182641347192, guid: 7b710aae76899ed4cbf9320f083e9ed4, type: 3}
   m_PrefabInstance: {fileID: 2133961361}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2139930203 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3650041828053240012, guid: 70c2a2529a4b65f44ad6242989ff1421, type: 3}
+  m_PrefabInstance: {fileID: 573607253}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2139930205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139930203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f6544f27bb7e14f95c2315d624aa70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DownwardWallForce
+  downwardForce: 100
+  maxFallSpeed: 100
+  pushAwayForce: 100
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
