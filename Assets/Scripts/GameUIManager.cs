@@ -16,8 +16,7 @@ public class GameUIManager : MonoBehaviour
     public Sprite[] levelTutorialSlides;
     public GameObject tutorialPrevButton;
     public GameObject tutorialNextButton;
-    public GameObject tutorialSkipButton;
-    public GameObject tutorialPlayButton; // shown on last slide instead of next
+    public GameObject tutorialPlayButton;
 
     private int currentSlide = 0;
     private bool isPaused = false;
@@ -28,6 +27,11 @@ public class GameUIManager : MonoBehaviour
         deathScreen.SetActive(false);
         winScreen.SetActive(false);
         pauseMenu.SetActive(false);
+
+        // Hide all tutorial buttons by default
+        if (tutorialPrevButton != null) tutorialPrevButton.SetActive(false);
+        if (tutorialNextButton != null) tutorialNextButton.SetActive(false);
+        if (tutorialPlayButton != null) tutorialPlayButton.SetActive(false);
 
         if (levelTutorialSlides != null && levelTutorialSlides.Length > 0)
         {
@@ -139,7 +143,7 @@ public class GameUIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         int nextScene = SceneManager.GetActiveScene().buildIndex + 1;
-        if (nextScene > 6)
+        if (nextScene > 11)
             StartCoroutine(LoadWithDelay(1));
         else
             StartCoroutine(LoadWithDelay(nextScene));
